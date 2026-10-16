@@ -85,7 +85,7 @@
     },
     {
       "item": "minecraft:stone_sword",
-      "min_tier": 1,
+      "min_tier": 0,
       "max_tier": 2,
       "weight": 5,
       "category": "weapon"
@@ -93,9 +93,16 @@
     {
       "item": "minecraft:iron_sword",
       "min_tier": 2,
-      "max_tier": 3,
+      "max_tier": 4,
       "weight": 5,
       "category": "weapon"
+    },
+    {
+      "item": "minecraft:golden_sword",
+      "category": "weapon",
+      "min_tier": 1,
+      "max_tier": 3,
+      "weight": 2
     },
     {
       "item": "minecraft:diamond_sword",
@@ -367,6 +374,13 @@
       "item": "minecraft:netherite_shovel",
       "category": "tool",
       "min_tier": 6,
+      "max_tier": 7,
+      "weight": 1
+    },
+    {
+      "item": "minecraft:trident",
+      "category": "weapon",
+      "min_tier": 4,
       "max_tier": 7,
       "weight": 1
     }
