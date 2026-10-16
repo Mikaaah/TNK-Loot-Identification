@@ -56,14 +56,14 @@ public final class IdentifierBlock extends Block {
             serverPlayer.sendSystemMessage(Component.translatable("message.tnkloot.station_disabled"));
             return ItemInteractionResult.FAIL;
         }
-        dev.mikaaah.tnkloot.menu.TnkMenuProvider.openIdentifier(serverPlayer);
+        dev.mikaaah.tnkloot.menu.TnkMenuProvider.openIdentifier(serverPlayer, pos);
         return ItemInteractionResult.SUCCESS;
     }
 
     @Override public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
             net.minecraft.world.entity.player.Player player, BlockHitResult hit) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer && dev.mikaaah.tnkloot.config.TnkConfig.get().stationIdentification())
-            dev.mikaaah.tnkloot.menu.TnkMenuProvider.openIdentifier(serverPlayer);
+            dev.mikaaah.tnkloot.menu.TnkMenuProvider.openIdentifier(serverPlayer, pos);
         return InteractionResult.SUCCESS;
     }
 

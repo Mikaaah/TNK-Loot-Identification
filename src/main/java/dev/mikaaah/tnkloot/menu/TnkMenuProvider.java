@@ -6,8 +6,8 @@ import net.minecraft.world.SimpleMenuProvider;
 
 public final class TnkMenuProvider {
     private TnkMenuProvider() {}
-    public static void openIdentifier(ServerPlayer player) {
-        player.openMenu(new SimpleMenuProvider((id, inv, p) -> new TnkMenu(TnkMenus.IDENTIFY.get(), id, inv, false),
+    public static void openIdentifier(ServerPlayer player, net.minecraft.core.BlockPos station) {
+        player.openMenu(new SimpleMenuProvider((id, inv, p) -> new TnkMenu(TnkMenus.IDENTIFY.get(), id, inv, false).atStation(station),
             Component.translatable("menu.tnkloot.identifier")), buf -> buf.writeUtf(dev.mikaaah.tnkloot.config.TnkConfig.tierSnapshot()));
     }
     public static void openEditor(ServerPlayer player) {

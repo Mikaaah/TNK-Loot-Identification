@@ -24,8 +24,18 @@ public final class IdentifierInteractions {
         if (!isIdentifier(event.getTarget())) return;
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
-        if (event.getEntity() instanceof ServerPlayer player && TnkConfig.get().stationIdentification())
-            TnkMenuProvider.openIdentifier(player);
+        if (event.getEntity() instanceof ServerPlayer player && TnkConfig.get().stationIdentification()) {
+            BlockPos anchor = anchor(event.getTarget());
+            if (anchor != null && player.level().getBlockState(anchor).getBlock() instanceof IdentifierBlock)
+                TnkMenuProvider.openIdentifier(player, anchor);
+        }
+    }
+    private static BlockPos anchor(Entity entity) {
+        String tag = entity.getTags().stream().filter(t -> t.startsWith(PREFIX)).findFirst().orElse("");
+        try {
+            String[] coordinates = tag.substring(PREFIX.length()).split("\\.");
+            return new BlockPos(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), Integer.parseInt(coordinates[2]));
+        } catch (IllegalArgumentException | IndexOutOfBoundsException ex) { return null; }
     }
     public static void onAttack(AttackEntityEvent event) {
         if (isIdentifier(event.getTarget())) event.setCanceled(true);
@@ -38,18 +48,12 @@ public final class IdentifierInteractions {
     }
     public static void onTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof Villager v) || !(v.level() instanceof ServerLevel level) || !isIdentifier(v)) return;
-        String tag = v.getTags().stream().filter(t -> t.startsWith(PREFIX)).findFirst().orElseThrow();
-        try {
-            String[] coordinates = tag.substring(PREFIX.length()).split("\\.");
-            BlockPos pos = new BlockPos(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), Integer.parseInt(coordinates[2]));
-            if (!level.hasChunkAt(pos)) return;
-            var state = level.getBlockState(pos);
-            if (!(state.getBlock() instanceof IdentifierBlock)) {
-                IdentifierBlock.particles(level, v, false); v.discard(); return;
-            }
-            IdentifierBlock.position(v, pos, state);
-        } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
-            dev.mikaaah.tnkloot.TnkLoot.LOG.warn("Invalid identifier anchor tag {}", tag);
+        BlockPos pos = anchor(v);
+        if (pos == null || !level.hasChunkAt(pos)) return;
+        var state = level.getBlockState(pos);
+        if (!(state.getBlock() instanceof IdentifierBlock)) {
+            IdentifierBlock.particles(level, v, false); v.discard(); return;
         }
+        IdentifierBlock.position(v, pos, state);
     }
 }

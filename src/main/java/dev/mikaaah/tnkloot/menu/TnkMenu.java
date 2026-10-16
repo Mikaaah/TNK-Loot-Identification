@@ -36,6 +36,8 @@ public final class TnkMenu extends AbstractContainerMenu {
     private int rollingSlot = -1, frame;
     private long lastTick = Long.MIN_VALUE;
     private boolean closing;
+    private net.minecraft.core.BlockPos station;
+    public TnkMenu atStation(net.minecraft.core.BlockPos pos) { this.station = pos.immutable(); return this; }
 
     public TnkMenu(MenuType<?> type, int id, Inventory inventory, boolean admin) {
         this(type, id, inventory, admin, TnkConfig.get().tiers());
@@ -60,7 +62,8 @@ public final class TnkMenu extends AbstractContainerMenu {
     }
     @Override public boolean stillValid(Player player) {
         return admin || player.isAlive() && player.distanceToSqr(openingPosition) <= 64
-            && TnkConfig.get().stationIdentification();
+            && TnkConfig.get().stationIdentification()
+            && (station == null || player.level().getBlockState(station).getBlock() instanceof IdentifierBlock);
     }
     public boolean admin() { return admin; }
     public boolean busy() { return data.get(3) != 0; }
