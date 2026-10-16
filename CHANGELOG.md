@@ -2,7 +2,7 @@
 
 ## 0.3.0-alpha
 
-- Add optional Apotheosis integration that maps configurable Guild tiers to registered rarity IDs and applies native affixes during identification.
+- Add optional Apotheosis integration with seven included, configurable Common-to-Ancient rarities and native affixes during identification.
 - Add an opt-in global loot modifier that converts configured weapon drops from entity, chest and modded loot tables into tier-stamped tokens.
 - Preserve no-Apotheosis operation, original weapon item IDs and existing weapon moveset behavior.
 - Document loot replacement and rarity mapping; extend configuration validation tests.

@@ -1,5 +1,12 @@
 {
   "item.tnkloot.unidentified_weapon": "Unidentified Weapon",
+  "rarity.tnkloot:common": "Common",
+  "rarity.tnkloot:uncommon": "Uncommon",
+  "rarity.tnkloot:rare": "Rare",
+  "rarity.tnkloot:epic": "Epic",
+  "rarity.tnkloot:legendary": "Legendary",
+  "rarity.tnkloot:mythic": "Mythic",
+  "rarity.tnkloot:ancient": "Ancient",
   "tooltip.tnkloot.tier": "Guild Tier %s — %s",
   "tooltip.tnkloot.identify": "Right-click to identify",
   "message.tnkloot.disabled": "Identification is disabled.",

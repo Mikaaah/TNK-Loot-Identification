@@ -1,0 +1,69 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "apotheosis"
+    }
+  ],
+  "type": "apotheosis:rarity",
+  "color": "#BB00BB",
+  "material": "minecraft:gold_ingot",
+  "sort_index": 600,
+  "rules": [
+    {
+      "type": "apotheosis:affix",
+      "affix_type": "stat"
+    },
+    {
+      "type": "apotheosis:affix",
+      "affix_type": "stat"
+    },
+    {
+      "type": "apotheosis:affix",
+      "affix_type": "stat"
+    },
+    {
+      "type": "apotheosis:affix",
+      "affix_type": "basic_effect"
+    },
+    {
+      "type": "apotheosis:chanced",
+      "chance": 0.3,
+      "rule": {
+        "type": "apotheosis:affix",
+        "affix_type": "basic_effect"
+      }
+    },
+    {
+      "type": "apotheosis:affix",
+      "affix_type": "ability"
+    },
+    {
+      "type": "apotheosis:socket",
+      "min": 1,
+      "max": 3
+    },
+    {
+      "type": "apotheosis:durability",
+      "min": 0.25,
+      "max": 0.55
+    }
+  ],
+  "weights": {
+    "haven": {
+      "weight": 0
+    },
+    "frontier": {
+      "weight": 0
+    },
+    "ascent": {
+      "weight": 0
+    },
+    "summit": {
+      "weight": 0
+    },
+    "pinnacle": {
+      "weight": 0
+    }
+  }
+}

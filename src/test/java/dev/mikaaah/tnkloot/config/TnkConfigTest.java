@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import com.google.gson.JsonParser;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TnkConfigTest {
@@ -17,7 +18,7 @@ class TnkConfigTest {
         assertEquals("novice", cfg.tierForRank(-1).id());
         assertEquals("legendary", cfg.tierForRank(100).id());
         assertEquals(3, cfg.tierForName("EXPLORER").orElseThrow().rank());
-        assertEquals("apotheosis:mythic", cfg.tierForName("legendary").orElseThrow().apotheosisRarity().toString());
+        assertEquals("tnkloot:ancient", cfg.tierForName("legendary").orElseThrow().apotheosisRarity().toString());
         assertFalse(cfg.replaceWeaponLoot());
         assertThrows(UnsupportedOperationException.class, () -> cfg.weapons().clear());
     }
@@ -70,6 +71,24 @@ class TnkConfigTest {
         String config = defaults().replace("\"replace_weapon_loot\": false", "\"replace_weapon_loot\": true");
         assertTrue(TnkConfig.parse(config).replaceWeaponLoot());
         assertThrows(IllegalArgumentException.class, () -> TnkConfig.parse(
-            config.replace("apotheosis:common", "bad rarity id")));
+            config.replace("tnkloot:common", "bad rarity id")));
+    }
+
+    @Test void customApotheosisRaritiesArePresentAndProgressionOrdered() throws Exception {
+        String[] ladder = {"common", "uncommon", "rare", "epic", "legendary", "mythic", "ancient"};
+        for (int i = 0; i < ladder.length; i++) {
+            var stream = getClass().getResourceAsStream("/data/tnkloot/rarities/" + ladder[i] + ".json");
+            assertNotNull(stream, ladder[i]);
+            try (stream) {
+                var json = JsonParser.parseString(new String(stream.readAllBytes())).getAsJsonObject();
+                assertEquals("apotheosis:rarity", json.get("type").getAsString());
+                assertFalse(json.getAsJsonArray("rules").isEmpty());
+                assertTrue(json.getAsJsonObject("weights").entrySet().stream()
+                    .allMatch(e -> e.getValue().getAsJsonObject().get("weight").getAsInt() == 0));
+            }
+        }
+        var cfg = TnkConfig.parse(defaults());
+        assertEquals("tnkloot:common", cfg.tierForRank(0).apotheosisRarity().toString());
+        assertEquals("tnkloot:ancient", cfg.tierForRank(7).apotheosisRarity().toString());
     }
 }

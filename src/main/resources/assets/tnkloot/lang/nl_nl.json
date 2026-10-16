@@ -1,5 +1,12 @@
 {
   "item.tnkloot.unidentified_weapon": "Ongeïdentificeerd wapen",
+  "rarity.tnkloot:common": "Gewoon",
+  "rarity.tnkloot:uncommon": "Ongewoon",
+  "rarity.tnkloot:rare": "Zeldzaam",
+  "rarity.tnkloot:epic": "Episch",
+  "rarity.tnkloot:legendary": "Legendarisch",
+  "rarity.tnkloot:mythic": "Mythisch",
+  "rarity.tnkloot:ancient": "Oud",
   "tooltip.tnkloot.tier": "Gilderang %s — %s",
   "tooltip.tnkloot.identify": "Rechtermuisknop om te identificeren",
   "message.tnkloot.disabled": "Identificatie is uitgeschakeld.",

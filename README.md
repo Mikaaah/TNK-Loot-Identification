@@ -54,7 +54,7 @@ Use an explicit player name when running from the server console. Unidentified i
 - Numeric tier ranks are save identities. Renaming a tier is safe; renumbering ranks changes the meaning of existing player data and tokens. Back up the world before changing rank assignments.
 - Client tooltips use the tier name stored on awarded tokens. Server configuration determines redemption; clients do not need a copy of the server's weapon configuration.
 
-Configured weapon IDs can now be replaced with tier-stamped tokens in entity, chest and other generated loot by enabling `replace_weapon_loot`. Each progression tier maps to an Apotheosis rarity, and identified weapons receive native Apotheosis affixes when that mod is installed. FTB Quests remains optional through command rewards; a custom FTB reward type and identification GUI are not implemented. FTB Teams multiplayer integration still needs validation against the pack's exact installed version. The token currently uses a vanilla placeholder model.
+Configured weapon IDs can now be replaced with tier-stamped tokens in entity, chest and other generated loot by enabling `replace_weapon_loot`. Each progression tier maps to the included Common → Ancient Apotheosis rarity ladder, and identified weapons receive Apotheosis affixes when that mod is installed. FTB Quests remains optional through command rewards; a custom FTB reward type and identification GUI are not implemented. FTB Teams multiplayer integration still needs validation against the pack's exact installed version. The token currently uses a vanilla placeholder model.
 
 ## Development
 

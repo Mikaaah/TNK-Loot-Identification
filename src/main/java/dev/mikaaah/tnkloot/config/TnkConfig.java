@@ -109,11 +109,13 @@ public final class TnkConfig {
 
     private static String defaultApotheosisRarity(int rank) {
         return switch (rank) {
-            case 0 -> "apotheosis:common";
-            case 1 -> "apotheosis:uncommon";
-            case 2 -> "apotheosis:rare";
-            case 3, 4 -> "apotheosis:epic";
-            default -> "apotheosis:mythic";
+            case 0 -> "tnkloot:common";
+            case 1 -> "tnkloot:uncommon";
+            case 2 -> "tnkloot:rare";
+            case 3 -> "tnkloot:epic";
+            case 4 -> "tnkloot:legendary";
+            case 5, 6 -> "tnkloot:mythic";
+            default -> "tnkloot:ancient";
         };
     }
 

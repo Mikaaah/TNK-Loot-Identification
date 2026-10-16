@@ -8,14 +8,14 @@
       "rank": 0,
       "id": "novice",
       "name": "Novice",
-      "apotheosis_rarity": "apotheosis:common",
+      "apotheosis_rarity": "tnkloot:common",
       "advancements": []
     },
     {
       "rank": 1,
       "id": "apprentice",
       "name": "Apprentice",
-      "apotheosis_rarity": "apotheosis:uncommon",
+      "apotheosis_rarity": "tnkloot:uncommon",
       "advancements": [
         "minecraft:story/upgrade_tools"
       ]
@@ -24,7 +24,7 @@
       "rank": 2,
       "id": "adventurer",
       "name": "Adventurer",
-      "apotheosis_rarity": "apotheosis:rare",
+      "apotheosis_rarity": "tnkloot:rare",
       "advancements": [
         "minecraft:story/smelt_iron"
       ]
@@ -33,7 +33,7 @@
       "rank": 3,
       "id": "explorer",
       "name": "Explorer",
-      "apotheosis_rarity": "apotheosis:epic",
+      "apotheosis_rarity": "tnkloot:epic",
       "advancements": [
         "minecraft:story/mine_diamond"
       ]
@@ -42,7 +42,7 @@
       "rank": 4,
       "id": "veteran",
       "name": "Veteran",
-      "apotheosis_rarity": "apotheosis:epic",
+      "apotheosis_rarity": "tnkloot:legendary",
       "advancements": [
         "minecraft:story/enter_the_nether"
       ]
@@ -51,7 +51,7 @@
       "rank": 5,
       "id": "champion",
       "name": "Champion",
-      "apotheosis_rarity": "apotheosis:mythic",
+      "apotheosis_rarity": "tnkloot:mythic",
       "advancements": [
         "minecraft:nether/obtain_blaze_rod"
       ]
@@ -60,7 +60,7 @@
       "rank": 6,
       "id": "hero",
       "name": "Hero",
-      "apotheosis_rarity": "apotheosis:mythic",
+      "apotheosis_rarity": "tnkloot:mythic",
       "advancements": [
         "minecraft:nether/summon_wither"
       ]
@@ -69,7 +69,7 @@
       "rank": 7,
       "id": "legendary",
       "name": "Legendary",
-      "apotheosis_rarity": "apotheosis:mythic",
+      "apotheosis_rarity": "tnkloot:ancient",
       "advancements": [
         "minecraft:end/kill_dragon"
       ]
