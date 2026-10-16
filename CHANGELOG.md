@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1-alpha
+
+- Add the T&K Loot Creative inventory tab containing the Identifier block and all eight unidentified item types.
+- Creative tokens include valid tier-0 identification data.
+
+
 ## 0.6.0-alpha
 
 - Replace inventory-search identification with a vanilla-style one-row counter: seven token slots and a cost-confirmation button.

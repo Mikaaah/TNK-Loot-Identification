@@ -5,9 +5,11 @@ Configurable unidentified weapons, armor and tools with Guild progression for **
 [![Build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml/badge.svg)](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml)
 [Issues](https://github.com/Mikaaah/TNK-Loot-Identification/issues) · [Configuration](docs/configuration.md) · [FTB Quests setup](examples/ftb-quests-reward-guide.md)
 
-**Builds:** [Download the latest successful build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml) → open a successful run → Artifacts → TNK-Loot-0.6.0-alpha. Install the plain JAR; the sources JAR is for developers.
+**Builds:** [Download the latest successful build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml) → open a successful run → Artifacts → TNK-Loot-0.6.1-alpha. Install the plain JAR; the sources JAR is for developers.
 
 Each category token records its Guild tier and a stable roll seed when awarded. Bring tokens to a Guild Identifier. Its one-row inventory accepts up to seven items, shows the total cost, and reveals each result with a short item roll and note-block sounds after confirmation. Results retain the original registered item's behavior and moveset integrations. This mod does not change item crafting or who can equip an item.
+
+Find the Identifier block and all eight unidentified item types in the **T&K Loot** Creative inventory tab.
 
 ## Installation and quick start
 
@@ -64,7 +66,7 @@ Use Java 21:
 ./gradlew build
 ```
 
-Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.6.0-alpha.jar`. The `-sources.jar` is for development, not installation. Tests cover config validation/atomic reloads, category pools, identification prices, weighted selection and progression persistence. GitHub Actions runs the build, unit tests and a dedicated-server integration test that generates every configured tier/category, verifies seven-item payment and safe close, and checks the NPC lifecycle.
+Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.6.1-alpha.jar`. The `-sources.jar` is for development, not installation. Tests cover config validation/atomic reloads, category pools, identification prices, weighted selection and progression persistence. GitHub Actions runs the build, unit tests and a dedicated-server integration test that generates every configured tier/category, verifies seven-item payment and safe close, and checks the NPC lifecycle.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md). All rights reserved, matching the original project metadata.
 

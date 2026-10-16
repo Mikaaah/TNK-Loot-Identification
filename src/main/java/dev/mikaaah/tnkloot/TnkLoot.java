@@ -54,6 +54,7 @@ public final class TnkLoot {
         BLOCKS.register(modBus);
         LOOT_MODIFIER_SERIALIZERS.register(modBus);
         TnkMenus.MENUS.register(modBus);
+        TnkCreativeTabs.TABS.register(modBus);
         TnkConfig.reload();
         NeoForge.EVENT_BUS.addListener(IdentifierSmokeTest::run);
         NeoForge.EVENT_BUS.addListener(ProgressionEvents::onAdvancement);
