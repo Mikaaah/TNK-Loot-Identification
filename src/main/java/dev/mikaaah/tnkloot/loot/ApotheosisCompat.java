@@ -1,61 +1,52 @@
 package dev.mikaaah.tnkloot.loot;
 
-import dev.mikaaah.tnkloot.TnkLoot;
 import dev.mikaaah.tnkloot.config.TnkConfig;
-import net.minecraft.resources.ResourceLocation;
+import dev.shadowsoffire.apotheosis.Apoth;
+import dev.shadowsoffire.apotheosis.affix.AffixHelper;
+import dev.shadowsoffire.apotheosis.affix.ItemAffixes;
+import dev.shadowsoffire.apotheosis.loot.*;
+import dev.shadowsoffire.apotheosis.tiers.GenContext;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModList;
-
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-/** Optional bridge to Apotheosis' public loot-generation API; no Apotheosis classes are linked at startup. */
+/** Required, compile-checked Apotheosis API. Missing affixes reject the transaction. */
 public final class ApotheosisCompat {
-    private static final AtomicBoolean WARNED = new AtomicBoolean();
     private ApotheosisCompat() {}
-
     public static ItemStack apply(ItemStack stack, int rank, Player player) {
-        if (!ModList.get().isLoaded("apotheosis")) return stack;
-        try {
-            ClassLoader loader = ApotheosisCompat.class.getClassLoader();
-            Class<?> rarityRegistry = Class.forName("dev.shadowsoffire.apotheosis.loot.RarityRegistry", true, loader);
-            Object registry = rarityRegistry.getField("INSTANCE").get(null);
-            @SuppressWarnings("unchecked")
-            List<Object> rarities = (List<Object>) rarityRegistry.getMethod("getSortedRarities").invoke(null);
-            ResourceLocation wanted = TnkConfig.get().tierForRank(rank).apotheosisRarity();
-            Object rarity = null;
-            for (Object candidate : rarities) {
-                for (Method method : registry.getClass().getMethods()) {
-                    if (method.getName().equals("getKey") && method.getParameterCount() == 1
-                        && method.getParameterTypes()[0].isAssignableFrom(candidate.getClass())) {
-                        Object key = method.invoke(registry, candidate);
-                        if (wanted.equals(key)) rarity = candidate;
-                        break;
-                    }
-                }
-                if (rarity != null) break;
-            }
-            if (rarity == null) {
-                warn("Apotheosis rarity " + wanted + " is not registered; returning an unmodified weapon", null);
-                return stack;
-            }
-            Class<?> genContext = Class.forName("dev.shadowsoffire.apotheosis.tiers.GenContext", true, loader);
-            Object context = genContext.getMethod("forPlayer", Player.class).invoke(null, player);
-            Class<?> lootController = Class.forName("dev.shadowsoffire.apotheosis.loot.LootController", true, loader);
-            return (ItemStack) lootController.getMethod("createLootItem", ItemStack.class, rarity.getClass(), genContext)
-                .invoke(null, stack, rarity, context);
-        } catch (ReflectiveOperationException | LinkageError ex) {
-            warn("Apotheosis integration failed; returning an unmodified weapon", ex);
-            return stack;
-        }
+        return apply(stack, rank, player, player.getRandom().nextLong());
     }
-
-    private static void warn(String message, Throwable error) {
-        if (WARNED.compareAndSet(false, true)) {
-            if (error == null) TnkLoot.LOG.warn(message);
-            else TnkLoot.LOG.warn(message, error);
+    public static ItemStack apply(ItemStack stack, int rank, Player player, long seed) {
+        var wanted = TnkConfig.get().tierForRank(rank).apotheosisRarity();
+        LootRarity rarity = RarityRegistry.getSortedRarities().stream()
+            .filter(r -> wanted.equals(RarityRegistry.INSTANCE.getKey(r))).findFirst()
+            .orElseThrow(() -> new IllegalStateException("Unknown Apotheosis rarity " + wanted));
+        LootCategory category = LootCategory.forItem(stack);
+        if (category.isNone()) throw new IllegalStateException("No Apotheosis loot category for " + stack.getItem());
+        GenContext context = GenContext.forPlayer(RandomSource.create(seed ^ 0x544E4B4C4F4F54L), player);
+        stack.set(Apoth.Components.AFFIXES, ItemAffixes.EMPTY);
+        AffixHelper.setRarity(stack, rarity);
+        for (LootRule rule : rarity.getRules(category)) {
+            // Some item categories have no effect/ability affixes. Skip those optional rules.
+            if (rule instanceof LootRule.AffixLootRule affix
+                && LootController.getWeightedAffixes(stack, rarity, affix.type(), context).stream()
+                    .noneMatch(a -> a.getWeight().asInt() > 0)) continue;
+            rule.execute(stack, rarity, context);
         }
+        ItemAffixes affixes = stack.getOrDefault(Apoth.Components.AFFIXES, ItemAffixes.EMPTY);
+        if (affixes.size() == 0)
+            throw new IllegalStateException("No eligible affixes for " + stack.getItem() + " at rarity " + wanted);
+        var names = new ArrayList<>(affixes.keySet());
+        // Keep the display name tied to actual affixes and the configured rarity.
+        String key = names.size() > 1 ? "misc.apotheosis.affix_name.three" : "misc.apotheosis.affix_name.two";
+        AffixHelper.setName(stack, Component.translatable(key, names.getFirst().get().getName(true), "",
+            names.size() > 1 ? names.getLast().get().getName(false) : "")
+            .withStyle(Style.EMPTY.withColor(rarity.color()).withItalic(false)));
+        stack.remove(Apoth.Components.TOUCHED_BY_MALICE);
+        return stack;
     }
 }

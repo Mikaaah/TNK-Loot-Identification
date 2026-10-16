@@ -55,9 +55,14 @@ public final class TnkLoot {
         LOOT_MODIFIER_SERIALIZERS.register(modBus);
         TnkMenus.MENUS.register(modBus);
         TnkConfig.reload();
+        NeoForge.EVENT_BUS.addListener(IdentifierSmokeTest::run);
         NeoForge.EVENT_BUS.addListener(ProgressionEvents::onAdvancement);
         NeoForge.EVENT_BUS.addListener(ProgressionEvents::onLogin);
         NeoForge.EVENT_BUS.addListener(TnkCommands::register);
         NeoForge.EVENT_BUS.addListener(IdentifierInteractions::onEntityInteract);
+        NeoForge.EVENT_BUS.addListener(IdentifierInteractions::onAttack);
+        NeoForge.EVENT_BUS.addListener(IdentifierInteractions::onDamage);
+        NeoForge.EVENT_BUS.addListener(IdentifierInteractions::onDeath);
+        NeoForge.EVENT_BUS.addListener(IdentifierInteractions::onTick);
     }
 }

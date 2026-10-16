@@ -1,0 +1,47 @@
+{
+  "type": "apotheosis:attribute",
+  "attribute": "apothic_attributes:arrow_damage",
+  "categories": [
+    "apotheosis:bow",
+    "apotheosis:trident"
+  ],
+  "definition": {
+    "affix_type": "stat",
+    "exclusive_set": [],
+    "weights": {
+      "quality": 0.1,
+      "weight": 25
+    }
+  },
+  "operation": "add_multiplied_total",
+  "values": {
+    "tnkloot:common": {
+      "min": 0.045,
+      "max": 0.06
+    },
+    "tnkloot:uncommon": {
+      "min": 0.0675,
+      "max": 0.1125
+    },
+    "tnkloot:rare": {
+      "min": 0.12,
+      "max": 0.18
+    },
+    "tnkloot:epic": {
+      "min": 0.1875,
+      "max": 0.2625
+    },
+    "tnkloot:legendary": {
+      "min": 0.225,
+      "max": 0.315
+    },
+    "tnkloot:mythic": {
+      "min": 0.25,
+      "max": 0.4
+    },
+    "tnkloot:ancient": {
+      "min": 0.2875,
+      "max": 0.46
+    }
+  }
+}

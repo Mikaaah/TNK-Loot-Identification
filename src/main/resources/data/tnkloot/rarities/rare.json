@@ -1,14 +1,8 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "apotheosis"
-    }
-  ],
   "type": "apotheosis:rarity",
   "color": "#5555FF",
-  "material": "minecraft:iron_ingot",
-  "sort_index": 500,
+  "material": "minecraft:copper_ingot",
+  "sort_index": 550,
   "rules": [
     {
       "type": "apotheosis:affix",
@@ -29,8 +23,8 @@
     },
     {
       "type": "apotheosis:durability",
-      "min": 0.1,
-      "max": 0.25
+      "min": 0.08,
+      "max": 0.18
     }
   ],
   "weights": {

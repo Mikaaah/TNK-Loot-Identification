@@ -19,7 +19,34 @@ import net.minecraft.network.chat.Component;
 /** Identification counter with a persistent, immobile villager attendant. */
 public final class IdentifierBlock extends Block {
     private static String npcTag(BlockPos pos) { return "tnkloot.identifier." + pos.getX() + "." + pos.getY() + "." + pos.getZ(); }
-    public IdentifierBlock(Properties properties) { super(properties); }
+    public static final net.minecraft.world.level.block.state.properties.DirectionProperty FACING =
+        net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+    public IdentifierBlock(Properties properties) {
+        super(properties);
+        registerDefaultState(stateDefinition.any().setValue(FACING, net.minecraft.core.Direction.NORTH));
+    }
+    @Override protected void createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); }
+    @Override public BlockState getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext context) {
+        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
+    public static void particles(ServerLevel level, Villager villager, boolean arriving) {
+        level.sendParticles(arriving ? net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER : net.minecraft.core.particles.ParticleTypes.POOF,
+            villager.getX(), villager.getY() + 1, villager.getZ(), 14, 0.3, 0.6, 0.3, 0.025);
+        level.playSound(null, villager.blockPosition(), arriving ? net.minecraft.sounds.SoundEvents.ENCHANTMENT_TABLE_USE : net.minecraft.sounds.SoundEvents.ILLUSIONER_MIRROR_MOVE,
+            net.minecraft.sounds.SoundSource.BLOCKS, 0.45F, arriving ? 1.3F : 1.1F);
+    }
+    public static void position(Villager villager, BlockPos pos, BlockState state) {
+        var front = state.getValue(FACING);
+        double x = pos.getX() + 0.5 - front.getStepX() * 1.35;
+        double z = pos.getZ() + 0.5 - front.getStepZ() * 1.35;
+        float yaw = front.toYRot();
+        villager.moveTo(x, pos.getY(), z, yaw, 0);
+        villager.setYHeadRot(yaw); villager.setYBodyRot(yaw);
+        villager.yRotO = yaw; villager.yHeadRotO = yaw; villager.yBodyRotO = yaw;
+        villager.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+        villager.setNoAi(true); villager.setNoGravity(true); villager.setInvulnerable(true);
+        villager.clearFire();
+    }
 
     @Override public ItemInteractionResult useItemOn(ItemStack held, BlockState state, Level level, BlockPos pos,
             net.minecraft.world.entity.player.Player player, InteractionHand hand, BlockHitResult hit) {
@@ -50,7 +77,7 @@ public final class IdentifierBlock extends Block {
         if (exists) return;
         Villager villager = EntityType.VILLAGER.create(serverLevel);
         if (villager == null) return;
-        villager.moveTo(pos.getX() + 1.4, pos.getY(), pos.getZ() + 0.5, 180, 0);
+        position(villager, pos, state);
         villager.setNoAi(true);
         villager.setInvulnerable(true);
         villager.setPersistenceRequired();
@@ -58,13 +85,14 @@ public final class IdentifierBlock extends Block {
         villager.setCustomNameVisible(true);
         villager.addTag(tag);
         serverLevel.addFreshEntity(villager);
+        particles(serverLevel, villager, true);
     }
 
     @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock()) && !level.isClientSide && level instanceof ServerLevel serverLevel) {
             String tag = npcTag(pos);
             serverLevel.getEntitiesOfClass(Villager.class, new AABB(pos).inflate(1.8), v -> v.getTags().contains(tag))
-                .forEach(Villager::discard);
+                .forEach(v -> { particles(serverLevel, v, false); v.discard(); });
         }
         super.onRemove(state, level, pos, newState, moved);
     }

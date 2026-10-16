@@ -1,0 +1,47 @@
+{
+  "type": "apotheosis:attribute",
+  "attribute": "minecraft:generic.attack_speed",
+  "categories": [
+    "apotheosis:melee_weapon",
+    "apotheosis:trident"
+  ],
+  "definition": {
+    "affix_type": "stat",
+    "exclusive_set": [],
+    "weights": {
+      "quality": 0.1,
+      "weight": 25
+    }
+  },
+  "operation": "add_multiplied_total",
+  "values": {
+    "tnkloot:common": {
+      "min": 0.045,
+      "max": 0.075
+    },
+    "tnkloot:uncommon": {
+      "min": 0.09,
+      "max": 0.135
+    },
+    "tnkloot:rare": {
+      "min": 0.12,
+      "max": 0.21
+    },
+    "tnkloot:epic": {
+      "min": 0.1875,
+      "max": 0.375
+    },
+    "tnkloot:legendary": {
+      "min": 0.225,
+      "max": 0.45
+    },
+    "tnkloot:mythic": {
+      "min": 0.4,
+      "max": 0.85
+    },
+    "tnkloot:ancient": {
+      "min": 0.46,
+      "max": 0.9775
+    }
+  }
+}

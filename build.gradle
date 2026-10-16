@@ -4,7 +4,7 @@ plugins {
     id 'idea'
 }
 
-version = '0.5.0-alpha'
+version = '0.6.0-alpha'
 group = 'dev.mikaaah.tnkloot'
 base { archivesName = 'tnkloot' }
 
@@ -31,11 +31,11 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     // Development runtime dependencies validate the required Apotheosis stack in NeoForge tests.
-    runtimeOnly 'dev.shadowsoffire:Placebo:1.21.1-9.9.4'
-    runtimeOnly('dev.shadowsoffire:ApothicAttributes:1.21.1-2.10.0') { exclude group: 'top.theillusivec4.curios' }
-    runtimeOnly 'dev.shadowsoffire:ApothicSpawners:1.21.1-1.4.0'
-    runtimeOnly('dev.shadowsoffire:ApothicEnchanting:1.21.1-1.6.2') { exclude group: 'top.theillusivec4.curios' }
-    runtimeOnly('dev.shadowsoffire:Apotheosis:1.21.1-8.9.0') {
+    implementation 'dev.shadowsoffire:Placebo:1.21.1-9.9.4'
+    implementation('dev.shadowsoffire:ApothicAttributes:1.21.1-2.10.0') { exclude group: 'top.theillusivec4.curios' }
+    implementation 'dev.shadowsoffire:ApothicSpawners:1.21.1-1.4.0'
+    implementation('dev.shadowsoffire:ApothicEnchanting:1.21.1-1.6.2') { exclude group: 'top.theillusivec4.curios' }
+    implementation('dev.shadowsoffire:Apotheosis:1.21.1-8.9.0') {
         // Optional upstream integrations are not required to boot the mod test runtime.
         exclude group: 'top.theillusivec4.curios'
         exclude group: 'vazkii.patchouli', module: 'Patchouli'

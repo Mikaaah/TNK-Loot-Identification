@@ -1,18 +1,17 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "apotheosis"
-    }
-  ],
   "type": "apotheosis:rarity",
   "color": "#AAAAAA",
-  "material": "minecraft:coal",
-  "sort_index": 300,
+  "material": "minecraft:paper",
+  "sort_index": 350,
   "rules": [
     {
       "type": "apotheosis:affix",
       "affix_type": "stat"
+    },
+    {
+      "type": "apotheosis:durability",
+      "min": 0,
+      "max": 0.06
     }
   ],
   "weights": {

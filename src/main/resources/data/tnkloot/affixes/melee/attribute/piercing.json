@@ -1,0 +1,48 @@
+{
+  "type": "apotheosis:attribute",
+  "attribute": "apothic_attributes:armor_pierce",
+  "categories": [
+    "apotheosis:melee_weapon",
+    "apotheosis:trident",
+    "apotheosis:bow"
+  ],
+  "definition": {
+    "affix_type": "stat",
+    "exclusive_set": [],
+    "weights": {
+      "quality": 0.1,
+      "weight": 25
+    }
+  },
+  "operation": "add_value",
+  "values": {
+    "tnkloot:common": {
+      "min": 0.6,
+      "max": 1.2
+    },
+    "tnkloot:uncommon": {
+      "min": 0.9,
+      "max": 1.8
+    },
+    "tnkloot:rare": {
+      "min": 2.4,
+      "max": 4.8
+    },
+    "tnkloot:epic": {
+      "min": 3.75,
+      "max": 7.5
+    },
+    "tnkloot:legendary": {
+      "min": 4.5,
+      "max": 9
+    },
+    "tnkloot:mythic": {
+      "min": 5,
+      "max": 12
+    },
+    "tnkloot:ancient": {
+      "min": 5.75,
+      "max": 13.8
+    }
+  }
+}

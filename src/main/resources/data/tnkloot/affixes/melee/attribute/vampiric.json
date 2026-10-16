@@ -1,0 +1,49 @@
+{
+  "type": "apotheosis:attribute",
+  "attribute": "apothic_attributes:life_steal",
+  "categories": [
+    "apotheosis:melee_weapon",
+    "apotheosis:trident"
+  ],
+  "definition": {
+    "affix_type": "stat",
+    "exclusive_set": [
+      "apotheosis:melee/attribute/berserking"
+    ],
+    "weights": {
+      "quality": 0.1,
+      "weight": 25
+    }
+  },
+  "operation": "add_value",
+  "values": {
+    "tnkloot:common": {
+      "min": 0.015,
+      "max": 0.024
+    },
+    "tnkloot:uncommon": {
+      "min": 0.0225,
+      "max": 0.036
+    },
+    "tnkloot:rare": {
+      "min": 0.03,
+      "max": 0.06
+    },
+    "tnkloot:epic": {
+      "min": 0.06,
+      "max": 0.0975
+    },
+    "tnkloot:legendary": {
+      "min": 0.072,
+      "max": 0.117
+    },
+    "tnkloot:mythic": {
+      "min": 0.1,
+      "max": 0.15
+    },
+    "tnkloot:ancient": {
+      "min": 0.115,
+      "max": 0.1725
+    }
+  }
+}

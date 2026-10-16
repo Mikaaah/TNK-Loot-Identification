@@ -1,0 +1,46 @@
+{
+  "type": "apotheosis:attribute",
+  "attribute": "apothic_attributes:experience_gained",
+  "categories": [
+    "apotheosis:breaker"
+  ],
+  "definition": {
+    "affix_type": "stat",
+    "exclusive_set": [],
+    "weights": {
+      "quality": 0.1,
+      "weight": 25
+    }
+  },
+  "operation": "add_multiplied_total",
+  "values": {
+    "tnkloot:common": {
+      "min": 0.075,
+      "max": 0.12
+    },
+    "tnkloot:uncommon": {
+      "min": 0.1125,
+      "max": 0.18
+    },
+    "tnkloot:rare": {
+      "min": 0.21,
+      "max": 0.3
+    },
+    "tnkloot:epic": {
+      "min": 0.2625,
+      "max": 0.45
+    },
+    "tnkloot:legendary": {
+      "min": 0.315,
+      "max": 0.54
+    },
+    "tnkloot:mythic": {
+      "min": 0.55,
+      "max": 0.65
+    },
+    "tnkloot:ancient": {
+      "min": 0.6325,
+      "max": 0.7475
+    }
+  }
+}

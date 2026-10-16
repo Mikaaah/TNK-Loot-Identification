@@ -42,59 +42,36 @@ public final class UnidentifiedWeaponItem extends Item {
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         return stack;
     }
-    private static CompoundTag data(ItemStack stack) {
+    public static CompoundTag data(ItemStack stack) {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
         return data == null ? new CompoundTag() : data.copyTag();
     }
-    private static int tier(ItemStack stack) { return Math.max(0, data(stack).getInt("tier")); }
+    public static int tier(ItemStack stack) { return Math.max(0, data(stack).getInt("tier")); }
 
+    /** Tokens can only be identified through the confirmed station transaction. */
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack token = player.getItemInHand(hand);
-        if (level.isClientSide) return InteractionResultHolder.success(token);
-        if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResultHolder.pass(token);
-        if (!TnkConfig.get().enableIdentification() || !TnkConfig.get().handheldIdentification()) {
-            serverPlayer.sendSystemMessage(Component.translatable("message.tnkloot.handheld_disabled"));
-            return InteractionResultHolder.fail(token);
-        }
-        return identify(level, serverPlayer, hand, token);
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
-    public static InteractionResultHolder<ItemStack> identify(Level level, ServerPlayer player, InteractionHand hand, ItemStack token) {
-        if (!(token.getItem() instanceof UnidentifiedWeaponItem unidentified)) return InteractionResultHolder.pass(token);
-        if (!TnkConfig.get().enableIdentification()) {
-            player.sendSystemMessage(Component.translatable("message.tnkloot.disabled"));
-            return InteractionResultHolder.fail(token);
-        }
-        int rank = tier(token);
-        ItemStack result = WeaponSelector.roll(level, rank, unidentified.category(), RandomSource.create(data(token).getLong("roll_seed")));
-        if (result.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("message.tnkloot.empty_pool", rank));
-            return InteractionResultHolder.fail(token);
-        }
-        result = ApotheosisCompat.apply(result, rank, player);
-        TnkConfig.Costs costs = TnkConfig.get().costs();
-        int amount = costs.enabled() ? costs.amount(rank, BuiltInRegistries.ITEM.getKey(result.getItem()).toString()) : 0;
-        Item currency = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(costs.item())).orElse(null);
-        if (amount > 0 && (currency == null || !has(player, currency, amount))) {
-            player.sendSystemMessage(Component.translatable("message.tnkloot.cost_required", amount,
-                Component.translatable(currency == null ? costs.item() : currency.getDescriptionId())));
-            return InteractionResultHolder.fail(token);
-        }
-        if (amount > 0) remove(player, currency, amount);
-        player.sendSystemMessage(Component.translatable("message.tnkloot.identified", result.getHoverName()).withStyle(ChatFormatting.GREEN));
-        if (token.getCount() == 1) return InteractionResultHolder.success(result);
-        token.shrink(1);
-        if (!player.getInventory().add(result)) player.drop(result, false);
-        return InteractionResultHolder.success(token);
+    /** Preview the base item deterministically; never mutate the token or player. */
+    public static ItemStack baseResult(Level level, ItemStack token) {
+        if (!(token.getItem() instanceof UnidentifiedWeaponItem unidentified)) return ItemStack.EMPTY;
+        return WeaponSelector.roll(level, tier(token), unidentified.category(),
+            RandomSource.create(data(token).getLong("roll_seed")));
     }
 
-    private static boolean has(ServerPlayer player, Item item, int amount) {
+    public static int cost(ItemStack token, ItemStack result) {
+        var costs = TnkConfig.get().costs();
+        return costs.enabled() ? costs.amount(tier(token), BuiltInRegistries.ITEM.getKey(result.getItem()).toString()) : 0;
+    }
+
+    public static boolean has(ServerPlayer player, Item item, int amount) {
         int found = 0;
         for (ItemStack stack : player.getInventory().items) if (stack.is(item)) found += stack.getCount();
         for (ItemStack stack : player.getInventory().offhand) if (stack.is(item)) found += stack.getCount();
         return found >= amount;
     }
-    private static void remove(ServerPlayer player, Item item, int amount) {
+    public static void remove(ServerPlayer player, Item item, int amount) {
         for (ItemStack stack : player.getInventory().items) {
             int taken = Math.min(amount, stack.is(item) ? stack.getCount() : 0);
             if (taken > 0) { stack.shrink(taken); amount -= taken; }

@@ -1,0 +1,17 @@
+{
+  "type": "apotheosis:magical",
+  "definition": {
+    "affix_type": "ability",
+    "exclusive_set": [],
+    "weights": {
+      "quality": 0.1,
+      "weight": 25
+    }
+  },
+  "rarities": [
+    "tnkloot:epic",
+    "tnkloot:legendary",
+    "tnkloot:mythic",
+    "tnkloot:ancient"
+  ]
+}
