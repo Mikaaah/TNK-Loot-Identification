@@ -68,7 +68,9 @@ public final class TnkMenu extends AbstractContainerMenu {
     }
     private void cycleRarity(ServerPlayer player) {
         var t = selectedTier();
-        var all = TnkConfig.get().tiers().stream().map(TnkConfig.Tier::apotheosisRarity).distinct().toList();
+        var all = new java.util.ArrayList<>(java.util.List.of("common", "uncommon", "rare", "epic", "legendary", "mythic", "ancient")
+            .stream().map(name -> ResourceLocation.fromNamespaceAndPath("tnkloot", name)).toList());
+        TnkConfig.get().tiers().stream().map(TnkConfig.Tier::apotheosisRarity).filter(id -> !all.contains(id)).forEach(all::add);
         int next = (all.indexOf(t.apotheosisRarity()) + 1) % all.size();
         TnkConfig.editTier(t.rank(), null, all.get(next)); report(player);
     }
