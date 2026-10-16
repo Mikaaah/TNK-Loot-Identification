@@ -40,7 +40,7 @@ A token's recorded rank is matched directly to these inclusive ranges, even if t
 
 ## Loot replacement and Apotheosis
 
-`replace_weapon_loot` is on by default. The global loot modifier replaces every generated stack whose exact item ID is configured with one category-specific, tier-stamped token per item. For example, a configured `minecraft:wooden_sword` stack becomes `tnkloot:unidentified_weapon`; an iron helmet becomes `tnkloot:unidentified_helmet`. This applies to vanilla and modded entity, chest, boss and other loot tables without replacing unrelated drops. Loot generated with a player context snapshots that player's effective tier; context-free loot (usually structure chests) uses rank 0. Removing an item from the registry stops future conversions. Disable the option to preserve the original loot.
+`replace_weapon_loot` is on by default. The global loot modifier replaces every generated stack whose exact item ID is configured with one category-specific, tier-stamped token per item. For example, a configured `minecraft:wooden_sword` stack becomes `tnkloot:unidentified_weapon`; an iron helmet becomes `tnkloot:unidentified_helmet`. This applies to vanilla and modded entity, chest, boss and other loot tables without replacing unrelated drops. Loot generated with a player context snapshots that player's effective tier; context-free loot (usually structure chests) starts at rank 0. The result is then clamped to the configured item's tier range, so a chest containing an item with `min_tier: 3` grants a tier-3 token instead of a tier-0 one. Removing an item from the registry stops future conversions. Disable the option to preserve the original loot.
 
 ## Identification costs
 
