@@ -112,4 +112,35 @@ class TnkConfigTest {
             """;
         assertThrows(IllegalArgumentException.class, () -> TnkConfig.parse(config));
     }
+
+    @Test void everyPresetStatRangeDecodesWithPlacebosActualCodec() throws Exception {
+        String[] paths = {"/data/tnkloot/affixes/melee/attribute/violent.json",
+            "/data/tnkloot/affixes/melee/attribute/graceful.json",
+            "/data/tnkloot/affixes/melee/attribute/piercing.json",
+            "/data/tnkloot/affixes/melee/attribute/vampiric.json",
+            "/data/tnkloot/affixes/armor/attribute/ironforged.json",
+            "/data/tnkloot/affixes/armor/attribute/steel_touched.json",
+            "/data/tnkloot/affixes/armor/attribute/blessed.json",
+            "/data/tnkloot/affixes/armor/attribute/windswept.json",
+            "/data/tnkloot/affixes/armor/attribute/stalwart.json",
+            "/data/tnkloot/affixes/ranged/attribute/agile.json",
+            "/data/tnkloot/affixes/ranged/attribute/elven.json",
+            "/data/tnkloot/affixes/ranged/attribute/streamlined.json",
+            "/data/tnkloot/affixes/breaker/attribute/destructive.json",
+            "/data/tnkloot/affixes/breaker/attribute/experienced.json",
+            "/data/tnkloot/affixes/breaker/attribute/lengthy.json",
+            "/data/tnkloot/affixes/generic/attribute/lucky.json"};
+        for (String path : paths) {
+            try (var stream = getClass().getResourceAsStream(path)) {
+                assertNotNull(stream, path);
+                var json = JsonParser.parseString(new String(stream.readAllBytes())).getAsJsonObject();
+                var values = json.getAsJsonObject("values");
+                assertEquals(7, values.size(), path);
+                for (var entry : values.entrySet())
+                    assertDoesNotThrow(() -> dev.shadowsoffire.placebo.util.StepFunction.CODEC
+                        .parse(com.mojang.serialization.JsonOps.INSTANCE, entry.getValue()).getOrThrow(),
+                        path + "/" + entry.getKey());
+            }
+        }
+    }
 }

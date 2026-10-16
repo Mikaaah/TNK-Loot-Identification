@@ -102,7 +102,7 @@ public final class IdentifierSmokeTest {
             server.halt(false);
         } catch (Throwable error) {
             TnkLoot.LOG.error("TNKLOOT_SMOKE_FAILED", error);
-            System.exit(1);
+            server.halt(false);
         }
     }
     private static void require(boolean ok, String message) {

@@ -22,19 +22,23 @@
     "tnkloot:rare": 0.6,
     "tnkloot:epic": {
       "min": 1.125,
-      "max": 2.25
+      "max": 2.25,
+      "step": 0.05625
     },
     "tnkloot:legendary": {
       "min": 1.35,
-      "max": 2.7
+      "max": 2.7,
+      "step": 0.0675
     },
     "tnkloot:mythic": {
       "min": 2,
-      "max": 6
+      "max": 6,
+      "step": 0.2
     },
     "tnkloot:ancient": {
       "min": 2.3,
-      "max": 6.9
+      "max": 6.9,
+      "step": 0.23
     }
   }
 }

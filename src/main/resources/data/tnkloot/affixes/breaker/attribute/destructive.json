@@ -17,31 +17,38 @@
   "values": {
     "tnkloot:common": {
       "min": 0.045,
-      "max": 0.09
+      "max": 0.09,
+      "step": 0.00225
     },
     "tnkloot:uncommon": {
       "min": 0.0675,
-      "max": 0.135
+      "max": 0.135,
+      "step": 0.003375
     },
     "tnkloot:rare": {
       "min": 0.15,
-      "max": 0.3
+      "max": 0.3,
+      "step": 0.0075
     },
     "tnkloot:epic": {
       "min": 0.1875,
-      "max": 0.525
+      "max": 0.525,
+      "step": 0.016875
     },
     "tnkloot:legendary": {
       "min": 0.225,
-      "max": 0.63
+      "max": 0.63,
+      "step": 0.02025
     },
     "tnkloot:mythic": {
       "min": 0.55,
-      "max": 0.85
+      "max": 0.85,
+      "step": 0.015
     },
     "tnkloot:ancient": {
       "min": 0.6325,
-      "max": 0.9775
+      "max": 0.9775,
+      "step": 0.01725
     }
   }
 }
