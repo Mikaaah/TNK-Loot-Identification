@@ -12,5 +12,19 @@
   "message.tnkloot.disabled": "Identification is disabled.",
   "message.tnkloot.empty_pool": "No available weapon for tier %s. Ask an administrator to run /tnkloot validate.",
   "message.tnkloot.identified": "[Guild] Identified: %s",
-  "message.tnkloot.unlocked": "[Guild] Unlocked tier %s — %s"
+  "message.tnkloot.unlocked": "[Guild] Unlocked tier %s — %s",
+  "item.tnkloot.unidentified_bow": "Unidentified Bow",
+  "item.tnkloot.unidentified_helmet": "Unidentified Helmet",
+  "item.tnkloot.unidentified_chestplate": "Unidentified Chestplate",
+  "item.tnkloot.unidentified_leggings": "Unidentified Leggings",
+  "item.tnkloot.unidentified_boots": "Unidentified Boots",
+  "item.tnkloot.unidentified_tool": "Unidentified Tool",
+  "item.tnkloot.unidentified_accessory": "Unidentified Accessory",
+  "tooltip.tnkloot.identify_cost": "Identification cost varies by tier and item.",
+  "message.tnkloot.handheld_disabled": "Handheld identification is disabled.",
+  "message.tnkloot.cost_required": "You need %s %s to identify this item.",
+  "message.tnkloot.station_disabled": "Station identification is disabled.",
+  "message.tnkloot.station_instruction": "Hold an unidentified item and use it on the identifier.",
+  "block.tnkloot.identifier": "Identifier",
+  "entity.tnkloot.identifier": "Guild Identifier"
 }

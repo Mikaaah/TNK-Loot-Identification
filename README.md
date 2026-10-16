@@ -1,22 +1,22 @@
 # T&K Loot and Identification
 
-Configurable unidentified weapons and Guild progression for **Minecraft 1.21.1 / NeoForge**.
+Configurable unidentified weapons, armor and tools with Guild progression for **Minecraft 1.21.1 / NeoForge**.
 
 [![Build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml/badge.svg)](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml)
 [Issues](https://github.com/Mikaaah/TNK-Loot-Identification/issues) · [Configuration](docs/configuration.md) · [FTB Quests setup](examples/ftb-quests-reward-guide.md)
 
-**Download:** [tnkloot-0.3.0-alpha.jar](https://github.com/Mikaaah/TNK-Loot-Identification/raw/refs/heads/main/downloads/tnkloot-0.3.0-alpha.jar)
+**Download:** [tnkloot-0.4.0-alpha.jar](https://github.com/Mikaaah/TNK-Loot-Identification/raw/refs/heads/main/downloads/tnkloot-0.4.0-alpha.jar)
 
-A weapon token records a Guild tier when awarded. Right-click it to identify a weighted weapon from that tier. The result is the original registered item, preserving its normal mod behavior and moveset integrations. This mod does not change item crafting or who can equip a weapon.
+Each category token records its Guild tier and a stable roll seed when awarded. Right-click it or use it on the Identifier block to reveal the original registered item, preserving its normal mod behavior and moveset integrations. This mod does not change item crafting or who can equip an item.
 
 ## Installation and quick start
 
-Install the compiled `tnkloot` JAR on **both client and server**, with Java 21 and NeoForge **21.1.262 or newer** for Minecraft 1.21.1. Apotheosis, FTB Quests and FTB Teams are optional.
+Install the compiled `tnkloot` JAR on **both client and server**, with Java 21 and NeoForge **21.1.262 or newer** for Minecraft 1.21.1. Apotheosis is required, along with Placebo, Patchouli, Apothic Attributes, Apothic Spawners and Apothic Enchanting. FTB Quests and FTB Teams remain optional.
 
 1. Start a world/server once to generate `config/tnkloot/tiers.json`.
 2. Edit the tiers and weapon pools. See [the configuration guide](docs/configuration.md).
 3. Run `/tnkloot reload`, then `/tnkloot validate` as an operator.
-4. Run `/tnkloot unidentified @s` in game, then right-click the token.
+4. Run `/tnkloot unidentified @s` in game, then right-click the token. Add a category, for example `/tnkloot unidentified @s explorer helmet`, to award a different token type.
 
 The default config has eight tiers: Novice, Apprentice, Adventurer, Explorer, Veteran, Champion, Hero and Legendary. Vanilla advancement milestones unlock them automatically. Modpacks can replace the entire tier list, names, milestones and weighted weapon pools.
 
@@ -39,11 +39,11 @@ Set `identification_enabled` to `false` to disable redemption. Set `share_ftb_te
 | `/tnkloot tier list` | Everyone | List configured tier IDs and ranks |
 | `/tnkloot tier unlock <players> <id or rank>` | Operator level 2 | Grant a tier, without lowering existing progress |
 | `/tnkloot tier reset <players>` | Operator level 2 | Clear selected personal progress and their current shared team progress |
-| `/tnkloot unidentified <players> [id or rank]` | Operator level 2 | Award a token using each recipient's tier or an explicit tier |
+| `/tnkloot unidentified <players> [tier] [category]` | Operator level 2 | Award a category token; categories: weapon, bow, helmet, chestplate, leggings, boots, tool, accessory |
 | `/tnkloot reload` | Operator level 2 | Validate and atomically reload settings |
 | `/tnkloot validate` | Operator level 2 | Report missing registry items and empty live pools |
 
-Use an explicit player name when running from the server console. Unidentified items awarded through ordinary `/give` or an Item Reward have no tier data and identify at tier 0. Use the mod's award command for tier-aware rewards.
+Use an explicit player name when running from the server console. Unidentified items awarded through ordinary `/give` or an Item Reward have no tier data and identify at tier 0. Use the mod's award command for tier-aware rewards. `/tnkloot unidentified @s explorer helmet` gives a tier-specific helmet token.
 
 ## Behavior and boundaries
 
@@ -54,7 +54,7 @@ Use an explicit player name when running from the server console. Unidentified i
 - Numeric tier ranks are save identities. Renaming a tier is safe; renumbering ranks changes the meaning of existing player data and tokens. Back up the world before changing rank assignments.
 - Client tooltips use the tier name stored on awarded tokens. Server configuration determines redemption; clients do not need a copy of the server's weapon configuration.
 
-Configured weapon IDs can now be replaced with tier-stamped tokens in entity, chest and other generated loot by enabling `replace_weapon_loot`. Each progression tier maps to the included Common → Ancient Apotheosis rarity ladder, and identified weapons receive Apotheosis affixes when that mod is installed. FTB Quests remains optional through command rewards; a custom FTB reward type and identification GUI are not implemented. FTB Teams multiplayer integration still needs validation against the pack's exact installed version. The token currently uses a vanilla placeholder model.
+Configured equipment IDs are replaced by matching category tokens in mob drops, boss rewards, structure chests and modded loot tables. The default config covers vanilla swords, bows, armor and tools, with emerald costs from 1 to 25 per tier. Prices can be customized by tier and item. The Identifier block spawns a stationary attendant and identifies tokens when used on the counter. Apotheosis rarity and affixes are applied during identification. Pools and costs are configured in JSON and reloaded with `/tnkloot reload`; an operator GUI for editing tier pools is still future work. FTB Teams integration still needs validation against the pack's exact installed version. Token icons currently use vanilla placeholder art until custom textures are provided.
 
 ## Development
 
@@ -64,6 +64,6 @@ Use Java 21:
 ./gradlew build
 ```
 
-Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.3.0-alpha.jar`. The `-sources.jar` is for development, not installation. Tests cover config validation/atomic reloads, weighted selection, progression persistence and optional integration settings. GitHub Actions runs the same build.
+Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.4.0-alpha.jar`. The `-sources.jar` is for development, not installation. Tests cover config validation/atomic reloads, category pools, identification prices, weighted selection and progression persistence. GitHub Actions runs the same build with the required Apotheosis development runtime.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md). All rights reserved, matching the original project metadata.

@@ -19,7 +19,11 @@ class TnkConfigTest {
         assertEquals("legendary", cfg.tierForRank(100).id());
         assertEquals(3, cfg.tierForName("EXPLORER").orElseThrow().rank());
         assertEquals("tnkloot:ancient", cfg.tierForName("legendary").orElseThrow().apotheosisRarity().toString());
-        assertFalse(cfg.replaceWeaponLoot());
+        assertTrue(cfg.replaceWeaponLoot());
+        assertTrue(cfg.handheldIdentification());
+        assertTrue(cfg.stationIdentification());
+        assertEquals(TnkConfig.Category.WEAPON, cfg.weapons().getFirst().category());
+        assertEquals(25, cfg.costs().amount(7, "minecraft:diamond_sword"));
         assertThrows(UnsupportedOperationException.class, () -> cfg.weapons().clear());
     }
     @Test void rejectsBrokenEntriesAndTypos() throws Exception {
@@ -67,9 +71,9 @@ class TnkConfigTest {
         assertEquals(10, disabled.tierForRank(999).rank());
     }
 
-    @Test void lootReplacementIsOptInAndRarityIdsAreValidated() throws Exception {
-        String config = defaults().replace("\"replace_weapon_loot\": false", "\"replace_weapon_loot\": true");
-        assertTrue(TnkConfig.parse(config).replaceWeaponLoot());
+    @Test void lootReplacementCanBeDisabledAndRarityIdsAreValidated() throws Exception {
+        String config = defaults().replace("\"replace_weapon_loot\": true", "\"replace_weapon_loot\": false");
+        assertFalse(TnkConfig.parse(config).replaceWeaponLoot());
         assertThrows(IllegalArgumentException.class, () -> TnkConfig.parse(
             config.replace("tnkloot:common", "bad rarity id")));
     }
@@ -90,5 +94,22 @@ class TnkConfigTest {
         var cfg = TnkConfig.parse(defaults());
         assertEquals("tnkloot:common", cfg.tierForRank(0).apotheosisRarity().toString());
         assertEquals("tnkloot:ancient", cfg.tierForRank(7).apotheosisRarity().toString());
+    }
+
+    @Test void costsSupportTierDefaultsAndPerItemOverrides() throws Exception {
+        String config = defaults().replace("\"per_item\": {}", "\"per_item\": {\"minecraft:wooden_sword\": 4}");
+        var costs = TnkConfig.parse(config).costs();
+        assertEquals(1, costs.amount(0, "minecraft:iron_sword"));
+        assertEquals(4, costs.amount(0, "minecraft:wooden_sword"));
+        assertThrows(IllegalArgumentException.class, () -> TnkConfig.parse(config.replace("\"minecraft:wooden_sword\": 4", "\"bad id\": 4")));
+        assertThrows(RuntimeException.class, () -> TnkConfig.parse(config.replace("\"minecraft:wooden_sword\": 4", "\"minecraft:wooden_sword\": -4")));
+    }
+
+    @Test void everyConfiguredTokenCategoryHasPoolCoveragePerTier() throws Exception {
+        String config = """
+            {"tiers":[{"rank":0,"id":"start"},{"rank":1,"id":"next"}],
+             "weapons":[{"item":"minecraft:leather_helmet","category":"helmet","min_tier":0,"max_tier":0}]}
+            """;
+        assertThrows(IllegalArgumentException.class, () -> TnkConfig.parse(config));
     }
 }

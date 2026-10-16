@@ -8,7 +8,7 @@ displayName="T&K Loot and Identification"
 authors="Mikaaah"
 displayURL="https://github.com/Mikaaah/TNK-Loot-Identification"
 issueTrackerURL="https://github.com/Mikaaah/TNK-Loot-Identification/issues"
-description='''Configurable unidentified weapons and Guild progression for Minecraft 1.21.1.'''
+description='''Tiered unidentified weapons, bows, armor and tools with emerald identification and Apotheosis affixes for Minecraft 1.21.1.'''
 [[dependencies.tnkloot]]
 modId="neoforge"
 type="required"
@@ -23,6 +23,37 @@ ordering="NONE"
 side="BOTH"
 [[dependencies.tnkloot]]
 modId="apotheosis"
-type="optional"
+type="required"
+versionRange="[8.9.0,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.tnkloot]]
+modId="placebo"
+type="required"
+versionRange="[9.9.2,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.tnkloot]]
+modId="patchouli"
+type="required"
+versionRange="[1,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.tnkloot]]
+modId="apothic_attributes"
+type="required"
+versionRange="[2.10.0,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.tnkloot]]
+modId="apothic_spawners"
+type="required"
+versionRange="[1.4.0,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.tnkloot]]
+modId="apothic_enchanting"
+type="required"
+versionRange="[1.6.2,)"
 ordering="AFTER"
 side="BOTH"

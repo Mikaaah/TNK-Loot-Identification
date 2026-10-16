@@ -1,5 +1,5 @@
 {
-  "item.tnkloot.unidentified_weapon": "Ongeïdentificeerd wapen",
+  "item.tnkloot.unidentified_weapon": "Unidentified Weapon",
   "rarity.tnkloot:common": "Gewoon",
   "rarity.tnkloot:uncommon": "Ongewoon",
   "rarity.tnkloot:rare": "Zeldzaam",
@@ -12,5 +12,19 @@
   "message.tnkloot.disabled": "Identificatie is uitgeschakeld.",
   "message.tnkloot.empty_pool": "Geen beschikbaar wapen voor rang %s. Vraag een beheerder om /tnkloot validate uit te voeren.",
   "message.tnkloot.identified": "[Gilde] Geïdentificeerd: %s",
-  "message.tnkloot.unlocked": "[Gilde] Rang %s ontgrendeld — %s"
+  "message.tnkloot.unlocked": "[Gilde] Rang %s ontgrendeld — %s",
+  "item.tnkloot.unidentified_bow": "Unidentified Bow",
+  "item.tnkloot.unidentified_helmet": "Unidentified Helmet",
+  "item.tnkloot.unidentified_chestplate": "Unidentified Chestplate",
+  "item.tnkloot.unidentified_leggings": "Unidentified Leggings",
+  "item.tnkloot.unidentified_boots": "Unidentified Boots",
+  "item.tnkloot.unidentified_tool": "Unidentified Tool",
+  "item.tnkloot.unidentified_accessory": "Unidentified Accessory",
+  "tooltip.tnkloot.identify_cost": "Identificatiekosten verschillen per tier en voorwerp.",
+  "message.tnkloot.handheld_disabled": "Handmatige identificatie is uitgeschakeld.",
+  "message.tnkloot.cost_required": "Je hebt %s %s nodig om dit voorwerp te identificeren.",
+  "message.tnkloot.station_disabled": "Identificatie via het station is uitgeschakeld.",
+  "message.tnkloot.station_instruction": "Houd een onbekend voorwerp vast en gebruik het op de identificator.",
+  "block.tnkloot.identifier": "Identificator",
+  "entity.tnkloot.identifier": "Gilde-identificator"
 }

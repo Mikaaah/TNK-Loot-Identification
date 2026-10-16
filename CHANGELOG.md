@@ -1,24 +1,22 @@
 # Changelog
 
+## 0.4.0-alpha
+
+- Add separate unidentified tokens for weapons, bows, helmets, chestplates, leggings, boots, tools and accessories.
+- Convert configured item IDs in vanilla and modded loot tables to their matching tier-stamped category token.
+- Snapshot rank, category, source item, source type and a stable base-item roll seed on each generated token.
+- Add configurable emerald identification prices with per-tier defaults and per-item overrides.
+- Add the craftable Identifier block with a stationary, invulnerable villager attendant.
+- Add category-aware `/tnkloot unidentified` awards and pool validation.
+- Make Apotheosis 1.21.1-8.9.0 and its Placebo, Patchouli, Apothic Attributes, Spawners and Enchanting dependencies required.
+- Update configuration examples, documentation and placeholder item models/localizations.
+
 ## 0.3.0-alpha
 
-- Add optional Apotheosis integration with seven included, configurable Common-to-Ancient rarities and native affixes during identification.
-- Add an opt-in global loot modifier that converts configured weapon drops from entity, chest and modded loot tables into tier-stamped tokens.
-- Preserve no-Apotheosis operation, original weapon item IDs and existing weapon moveset behavior.
-- Document loot replacement and rarity mapping; extend configuration validation tests.
+- Add custom Common-to-Ancient Apotheosis rarities mapped from Guild tiers.
+- Add optional Apotheosis affixes and configured weapon-loot replacement.
+- Preserve original weapon item IDs and existing weapon moveset behavior.
 
 ## 0.2.0-alpha
 
-- Reject invalid config entries, unknown keys, fractional/overflowing numbers and uncovered tiers atomically.
-- Ship one bundled default configuration; retain safe disabled behavior on invalid first startup.
-- Add `/tnkloot validate` for missing installed items and empty live weapon pools.
-- Reconcile existing advancements for online players after a successful reload.
-- Normalize effective player ranks to configured tiers after config changes without deleting saved progress.
-- Use an immutable weighted pool with unbiased sampling and totals above the 32-bit limit.
-- Preserve extra tokens if an administrator overrides their normal stack size.
-- Translate redemption, tier unlocks and token tooltips into English and Dutch.
-- Add automated config, weighted selection and persistence tests, build tooling and project documentation.
-
-## 0.1.0-alpha
-
-- Initial standalone unidentified weapon, configurable Guild tiers, saved progression and optional FTB command/team bridge.
+- Add persistent player and optional FTB-team progression, commands, and JSON-driven tiers and weapon pools.

@@ -3,6 +3,7 @@ package dev.mikaaah.tnkloot.loot;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.mikaaah.tnkloot.config.TnkConfig;
+import dev.mikaaah.tnkloot.config.TnkConfig.Category;
 import dev.mikaaah.tnkloot.progression.ProgressionService;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,12 +30,17 @@ public final class WeaponLootModifier extends LootModifier {
         int rank = player == null ? 0 : ProgressionService.getTier(player);
         for (int i = 0; i < generatedLoot.size(); i++) {
             ItemStack stack = generatedLoot.get(i);
-            boolean configured = TnkConfig.get().weapons().stream().anyMatch(w ->
+            var configured = TnkConfig.get().weapons().stream().filter(w ->
                 BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(net.minecraft.resources.ResourceLocation.parse(w.id()))
-                    && WeaponSelector.available(w));
-            if (!configured) continue;
+                    && WeaponSelector.available(w)).findFirst();
+            if (configured.isEmpty()) continue;
+            Category category = configured.get().category();
             generatedLoot.remove(i--);
-            for (int n = 0; n < stack.getCount(); n++) generatedLoot.add(UnidentifiedWeaponItem.create(rank));
+            int itemTier = Math.max(configured.get().minTier(), Math.min(rank, configured.get().maxTier()));
+            String sourceType = context.getParamOrNull(LootContextParams.THIS_ENTITY) == null ? "loot_table" : "entity_drop";
+            String sourceItem = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+            for (int n = 0; n < stack.getCount(); n++)
+                generatedLoot.add(UnidentifiedWeaponItem.create(category, itemTier, sourceItem, sourceType));
         }
         return generatedLoot;
     }

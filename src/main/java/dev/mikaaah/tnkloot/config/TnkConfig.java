@@ -14,9 +14,22 @@ import java.util.*;
 public final class TnkConfig {
     public enum Mode { ADVANCEMENTS, FTB_QUESTS, MANUAL, OFF }
     public record Tier(int rank, String id, String name, List<ResourceLocation> advancements, ResourceLocation apotheosisRarity) {}
-    public record Weapon(String id, int minTier, int maxTier, int weight) {}
+    public enum Category {
+        WEAPON("unidentified_weapon"), BOW("unidentified_bow"), HELMET("unidentified_helmet"),
+        CHESTPLATE("unidentified_chestplate"), LEGGINGS("unidentified_leggings"), BOOTS("unidentified_boots"),
+        TOOL("unidentified_tool"), ACCESSORY("unidentified_accessory");
+        private final String token;
+        Category(String token) { this.token = token; }
+        public String token() { return token; }
+        public static Category parse(String value) { return valueOf(value.toUpperCase(Locale.ROOT)); }
+    }
+    public record Weapon(String id, Category category, int minTier, int maxTier, int weight) {}
+    public record Costs(boolean enabled, String item, int defaultAmount, Map<Integer,Integer> tierAmounts, Map<String,Integer> itemAmounts) {
+        public int amount(int tier, String itemId) { return itemAmounts.getOrDefault(itemId, tierAmounts.getOrDefault(tier, defaultAmount)); }
+    }
     public record Settings(Mode mode, boolean shareFtbTeams, boolean enableIdentification, boolean replaceWeaponLoot,
-                           List<Tier> tiers, List<Weapon> weapons) {
+                           boolean handheldIdentification, boolean stationIdentification, List<Tier> tiers,
+                           List<Weapon> weapons, Costs costs) {
         public int highestTier() { return tiers.getLast().rank(); }
         public Optional<Tier> tierForName(String id) { return tiers.stream().filter(t -> t.id().equalsIgnoreCase(id)).findFirst(); }
         public Tier tierForRank(int rank) {
@@ -25,8 +38,9 @@ public final class TnkConfig {
         }
     }
 
-    private static volatile Settings current = new Settings(Mode.MANUAL, false, false, false,
-        List.of(new Tier(0, "novice", "Novice", List.of(), ResourceLocation.withDefaultNamespace("common"))), List.of());
+    private static volatile Settings current = new Settings(Mode.MANUAL, false, false, false, true, true,
+        List.of(new Tier(0, "novice", "Novice", List.of(), ResourceLocation.withDefaultNamespace("common"))), List.of(),
+        new Costs(false, "minecraft:emerald", 1, Map.of(), Map.of()));
     private TnkConfig() {}
     public static Settings get() { return current; }
     public static Path path() { return FMLPaths.CONFIGDIR.get().resolve("tnkloot/tiers.json"); }
@@ -56,11 +70,14 @@ public final class TnkConfig {
     /** Strict parsing prevents a typo from silently deleting a tier or emptying a loot pool. */
     public static Settings parse(String json) {
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
-        keys(root, "progression_mode", "share_ftb_teams", "identification_enabled", "replace_weapon_loot", "tiers", "weapons");
+        keys(root, "progression_mode", "share_ftb_teams", "identification_enabled", "replace_weapon_loot", "handheld_identification", "station_identification", "identification_costs", "tiers", "weapons");
         Mode mode = Mode.valueOf(string(root, "progression_mode", "ADVANCEMENTS").toUpperCase(Locale.ROOT));
         boolean share = bool(root, "share_ftb_teams", true);
         boolean identification = bool(root, "identification_enabled", true);
-        boolean replaceWeaponLoot = bool(root, "replace_weapon_loot", false);
+        boolean replaceWeaponLoot = bool(root, "replace_weapon_loot", true);
+        boolean handheld = bool(root, "handheld_identification", true);
+        boolean station = bool(root, "station_identification", true);
+        Costs costs = parseCosts(root.has("identification_costs") ? root.getAsJsonObject("identification_costs") : new JsonObject());
         List<Tier> tiers = new ArrayList<>();
         Set<Integer> ranks = new HashSet<>();
         Set<String> ids = new HashSet<>();
@@ -88,23 +105,52 @@ public final class TnkConfig {
         }
         tiers.sort(Comparator.comparingInt(Tier::rank));
         if (tiers.isEmpty() || tiers.getFirst().rank() != 0) throw new IllegalArgumentException("A rank-0 tier is required");
+        for (int rank : costs.tierAmounts().keySet()) if (!ranks.contains(rank))
+            throw new IllegalArgumentException("Identification cost references unknown tier rank " + rank);
         List<Weapon> weapons = new ArrayList<>();
+        Map<String,Category> itemCategories = new HashMap<>();
         for (JsonElement element : root.getAsJsonArray("weapons")) {
             JsonObject e = element.getAsJsonObject();
-            keys(e, "item", "min_tier", "max_tier", "weight");
+            keys(e, "item", "category", "min_tier", "max_tier", "weight");
             String id = string(e, "item", null);
             if (ResourceLocation.tryParse(id) == null) throw new IllegalArgumentException("Invalid item ID: " + id);
+            Category category = Category.parse(string(e, "category", "weapon"));
+            Category prior = itemCategories.putIfAbsent(id, category);
+            if (prior != null && prior != category) throw new IllegalArgumentException("Item is assigned to multiple categories: " + id);
             int min = integer(e, "min_tier", null);
             int max = integer(e, "max_tier", Integer.MAX_VALUE);
             int weight = integer(e, "weight", 1);
             if (min < 0 || max < min || weight < 1) throw new IllegalArgumentException("Invalid tier range or weight: " + e);
-            weapons.add(new Weapon(id, min, max, weight));
+            weapons.add(new Weapon(id, category, min, max, weight));
         }
-        if (identification) for (Tier tier : tiers) {
-            if (weapons.stream().noneMatch(w -> tier.rank() >= w.minTier() && tier.rank() <= w.maxTier()))
-                throw new IllegalArgumentException("No configured weapons for tier " + tier.id());
+        if (identification) for (Category category : weapons.stream().map(Weapon::category).distinct().toList())
+            for (Tier tier : tiers) if (weapons.stream().noneMatch(w -> w.category() == category && tier.rank() >= w.minTier() && tier.rank() <= w.maxTier()))
+                throw new IllegalArgumentException("No configured " + category.name().toLowerCase(Locale.ROOT) + " items for tier " + tier.id());
+        return new Settings(mode, share, identification, replaceWeaponLoot, handheld, station, List.copyOf(tiers), List.copyOf(weapons), costs);
+    }
+
+    private static Costs parseCosts(JsonObject obj) {
+        keys(obj, "enabled", "item", "default", "per_tier", "per_item");
+        boolean enabled = bool(obj, "enabled", true);
+        String item = string(obj, "item", "minecraft:emerald");
+        if (ResourceLocation.tryParse(item) == null) throw new IllegalArgumentException("Invalid identification cost item: " + item);
+        int fallback = integer(obj, "default", 1);
+        if (fallback < 0) throw new IllegalArgumentException("Identification cost cannot be negative");
+        Map<Integer,Integer> tiers = new HashMap<>();
+        if (obj.has("per_tier")) for (var e : obj.getAsJsonObject("per_tier").entrySet()) {
+            int rank = Integer.parseInt(e.getKey()), amount = e.getValue().getAsBigDecimal().intValueExact();
+            if (rank < 0 || amount < 0) throw new IllegalArgumentException("Invalid per-tier identification cost");
+            tiers.put(rank, amount);
         }
-        return new Settings(mode, share, identification, replaceWeaponLoot, List.copyOf(tiers), List.copyOf(weapons));
+        Map<String,Integer> items = new HashMap<>();
+        if (obj.has("per_item")) for (var e : obj.getAsJsonObject("per_item").entrySet()) {
+            if (ResourceLocation.tryParse(e.getKey()) == null || !e.getValue().isJsonPrimitive() || !e.getValue().getAsJsonPrimitive().isNumber())
+                throw new IllegalArgumentException("Invalid per-item identification cost: " + e.getKey());
+            int amount = e.getValue().getAsBigDecimal().intValueExact();
+            if (amount < 0) throw new IllegalArgumentException("Identification cost cannot be negative");
+            items.put(e.getKey(), amount);
+        }
+        return new Costs(enabled, item, fallback, Map.copyOf(tiers), Map.copyOf(items));
     }
 
     private static String defaultApotheosisRarity(int rank) {

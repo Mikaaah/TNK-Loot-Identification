@@ -4,7 +4,7 @@ plugins {
     id 'idea'
 }
 
-version = '0.3.0-alpha'
+version = '0.4.0-alpha'
 group = 'dev.mikaaah.tnkloot'
 base { archivesName = 'tnkloot' }
 
@@ -23,8 +23,25 @@ neoForge {
 
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 
-repositories { mavenCentral() }
-dependencies { testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4' }
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.shadowsoffire.dev/releases' }
+    maven { url = 'https://api.modrinth.com/maven' }
+}
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    // Development runtime dependencies validate the required Apotheosis stack in NeoForge tests.
+    runtimeOnly 'dev.shadowsoffire:Placebo:1.21.1-9.9.4'
+    runtimeOnly('dev.shadowsoffire:ApothicAttributes:1.21.1-2.10.0') { exclude group: 'top.theillusivec4.curios' }
+    runtimeOnly 'dev.shadowsoffire:ApothicSpawners:1.21.1-1.4.0'
+    runtimeOnly('dev.shadowsoffire:ApothicEnchanting:1.21.1-1.6.2') { exclude group: 'top.theillusivec4.curios' }
+    runtimeOnly('dev.shadowsoffire:Apotheosis:1.21.1-8.9.0') {
+        // Optional upstream integrations are not required to boot the mod test runtime.
+        exclude group: 'top.theillusivec4.curios'
+        exclude group: 'vazkii.patchouli', module: 'Patchouli'
+    }
+    runtimeOnly 'maven.modrinth:nU0bVIaL:h6hKI2ob'
+}
 tasks.named('test', Test) { useJUnitPlatform() }
 java { withSourcesJar() }
 tasks.named('processResources') {
@@ -36,6 +53,7 @@ neoForge.unitTest {
     enable()
     testedMod = neoForge.mods.tnkloot
 }
+
 dependencies { testRuntimeOnly 'org.junit.platform:junit-platform-launcher' }
 
 // Forward console commands during the development server run.
