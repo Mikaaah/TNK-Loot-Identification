@@ -21,3 +21,8 @@ type="required"
 versionRange="[1.21.1,1.21.2)"
 ordering="NONE"
 side="BOTH"
+[[dependencies.tnkloot]]
+modId="apotheosis"
+type="optional"
+ordering="AFTER"
+side="BOTH"
