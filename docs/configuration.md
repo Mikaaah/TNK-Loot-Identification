@@ -9,7 +9,7 @@ Edit `config/tnkloot/tiers.json` on the server. A copy of the defaults is in [th
 | `progression_mode` | `ADVANCEMENTS` | `ADVANCEMENTS`, `FTB_QUESTS`, `MANUAL` or `OFF` |
 | `share_ftb_teams` | `true` | Read and grant the current optional FTB team's shared rank |
 | `identification_enabled` | `true` | Allow item redemption |
-| `handheld_identification` | `true` | Allow right-click redemption |
+| `handheld_identification` | `false` | Legacy compatibility key; handheld identification is removed |
 | `station_identification` | `true` | Allow redemption at the Identifier block |
 | `replace_weapon_loot` | `true` | Replace configured item stacks in generated loot with category-specific tokens |
 | `identification_costs` | Object | Configure currency and prices |
@@ -24,7 +24,7 @@ Unknown keys are rejected to catch misspellings. Booleans must be JSON booleans;
 {"rank": 3, "id": "explorer", "name": "Explorer", "advancements": ["minecraft:story/mine_diamond"], "apotheosis_rarity": "apotheosis:epic"}
 ```
 
-Ranks must be unique, nonnegative and below 2147483647. They can have gaps. IDs must be unique, using letters, digits and underscores; they normalize to lowercase. `name` defaults to the ID. `advancements` is optional; **any** listed completed advancement grants the tier in advancement mode. An empty list means no automatic grant. Unlocking a higher tier does not require earlier milestones. `apotheosis_rarity` is optional and defaults to this mod's Common → Uncommon → Rare → Epic → Legendary → Mythic → Ancient ladder according to rank. When Apotheosis is installed, it selects the rarity used to generate native Apotheosis affixes when a token is identified. The mod supplies these seven rarities; their natural world-loot weights are zero, so they are awarded through this progression system. Map multiple Guild tiers to one rarity, or use your own datapack rarity ID.
+Ranks must be unique, nonnegative and below 2147483647. They can have gaps. IDs must be unique, using letters, digits and underscores; they normalize to lowercase. `name` defaults to the ID. `advancements` is optional; **any** listed completed advancement grants the tier in advancement mode. An empty list means no automatic grant. Unlocking a higher tier does not require earlier milestones. `apotheosis_rarity` is optional and defaults to this mod's Common → Uncommon → Rare → Epic → Legendary → Mythic → Ancient ladder according to rank. It selects the rarity used to generate native Apotheosis affixes when a token is identified. The mod supplies these seven rarities; their natural world-loot weights are zero, so they are awarded through this progression system. Map multiple Guild tiers to one rarity, or use your own datapack rarity ID.
 
 ## Equipment pools
 
@@ -58,8 +58,8 @@ Costs are charged from the player's inventory and offhand. Per-item prices overr
 
 ## Identifier block
 
-Craft or grant `tnkloot:identifier`. Place it to spawn an invulnerable, no-AI Guild Identifier beside the counter. Right-click either the block or its attendant to open the identification screen; keep the token in your inventory and select Identify. The same cost rules apply as handheld use. Breaking the block removes its attendant.
+Craft or grant `tnkloot:identifier`. Place it to spawn a protected, stationary Guild Identifier behind the counter, facing the counter. Right-click either the block or attendant, insert up to seven tokens (one per slot), then confirm the total cost. Shift-click transfers tokens into the row. Each item cycles through every eligible base item before revealing its result, using note-block ticks and a final chime. A batch is prepared and paid for once; all inventory actions are locked while it rolls. Closing, disconnecting or dying returns the already-paid final results. Breaking the block removes the attendant with departure particles.
 
 Operators can run `/tnkloot editor` in game to open the tier editor. Navigate configured ranks, cycle the Apotheosis rarity mapping, add or remove the held item from a tier, and create a new tier. Changes are validated and written to `config/tnkloot/tiers.json` immediately. The editor generates new IDs and names for tiers; edit `id`, `name`, or `advancements` in JSON and run `/tnkloot reload` for those fields.
 
-Apotheosis is a required runtime dependency. Install Apotheosis 1.21.1-8.9.0 or newer together with its required mods: Placebo, Apothic Attributes, Apothic Spawners, Apothic Enchanting and Patchouli. For each tier, `apotheosis_rarity` must match a rarity registered by Apotheosis or a datapack. Identification applies Apotheosis' normal rarity rules and affixes to eligible selected items. If a configured rarity is unavailable, the mod logs one warning and safely returns the base item without affixes.
+Apotheosis is a required runtime dependency. Install Apotheosis 1.21.1-8.9.0 or newer together with its required mods: Placebo, Apothic Attributes, Apothic Spawners, Apothic Enchanting and Patchouli. For each tier, `apotheosis_rarity` must match a rarity registered by Apotheosis or a datapack. Identification applies Apotheosis' normal rarity rules and affixes to eligible selected items. A missing rarity, unsupported loot category or empty affix pool rejects the entire batch before payment and preserves all tokens. See [Apotheosis presets](apotheosis-presets.md). Adding an accessory to a pool also requires an Apotheosis loot-category integration for that item.

@@ -23,8 +23,10 @@ public final class IdentifierSmokeTest {
         if (!Boolean.getBoolean("tnkloot.smokeTest")) return;
         var server = event.getServer();
         try {
-            var player = new ServerPlayer(server, server.overworld(),
-                new GameProfile(UUID.randomUUID(), "TNKSmoke"), ClientInformation.createDefault());
+            var player = new net.neoforged.neoforge.common.util.FakePlayer(server.overworld(),
+                new GameProfile(UUID.randomUUID(), "TNKSmoke")) {
+                    @Override public boolean hasDisconnected() { return false; }
+                };
             int checks = 0;
             for (var tier : TnkConfig.get().tiers()) {
                 for (var category : TnkConfig.Category.values()) {

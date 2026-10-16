@@ -31,7 +31,7 @@
   "menu.tnkloot.editor": "T&K-tiereditor",
   "menu.tnkloot.insert": "Plaats maximaal 7 items",
   "menu.tnkloot.rolling": "Identificeren...",
-  "menu.tnkloot.total": "Totale kosten: %s",
+  "menu.tnkloot.total": "Totaal: %s %s",
   "menu.tnkloot.confirm": "Identificeer %s item(s) voor %s %s",
   "message.tnkloot.batch_unavailable": "Identificeren lukt niet: controleer de voorwerpen, betaling en serverinstellingen.",
   "message.tnkloot.affix_failed": "Identificatie mislukt: ongeldige item- of affixgroep. Er zijn geen voorwerpen of betaalmiddelen verbruikt; vraag een beheerder het serverlog te controleren.",

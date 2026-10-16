@@ -29,7 +29,7 @@ public final class TnkMenuScreen extends AbstractContainerScreen<TnkMenu> {
             addButton("Add held item", x + 12, y + 82, 100, 20, 4);
             addButton("Remove held", x + 118, y + 82, 94, 20, 5);
             addButton("+ New tier", x + 218, y + 82, 90, 20, 6);
-        } else confirm = addButton("✓", x + 150, y + 29, 19, 19, 0);
+        } else confirm = addButton("✓", x + 134, y + 29, 35, 19, 0);
     }
     private Button addButton(String label, int x, int y, int width, int height, int action) {
         return addRenderableWidget(Button.builder(Component.literal(label), b -> {
@@ -40,6 +40,7 @@ public final class TnkMenuScreen extends AbstractContainerScreen<TnkMenu> {
     @Override protected void containerTick() {
         super.containerTick();
         if (confirm != null) {
+            confirm.setMessage(Component.literal(menu.busy() ? "..." : "✓ " + menu.quotedCost()));
             confirm.active = !menu.busy() && menu.affordable() && menu.inputCount() > 0;
             confirm.setTooltip(Tooltip.create(Component.translatable("menu.tnkloot.confirm",
                 menu.inputCount(), menu.quotedCost(), Component.translatable(menu.currency().getDescriptionId()))));
@@ -56,7 +57,6 @@ public final class TnkMenuScreen extends AbstractContainerScreen<TnkMenu> {
         g.fill(leftPos + 3, topPos + 3, leftPos + imageWidth - 3, topPos + imageHeight - 3, 0xFFC6C6C6);
         if (!menu.admin()) {
             for (var slot : menu.slots) slotBackground(g, leftPos + slot.x, topPos + slot.y);
-            g.renderItem(new ItemStack(menu.currency()), leftPos + 134, topPos + 30);
             g.fill(leftPos + 7, topPos + 59, leftPos + 169, topPos + 60, 0xFFAAAAAA);
         }
     }
@@ -65,7 +65,7 @@ public final class TnkMenuScreen extends AbstractContainerScreen<TnkMenu> {
         if (!menu.admin()) {
             g.drawString(font, Component.translatable(menu.busy() ? "menu.tnkloot.rolling" : "menu.tnkloot.insert"), 8, 19, 0x404040, false);
             if (menu.inputCount() > 0 || menu.busy())
-                g.drawString(font, Component.translatable("menu.tnkloot.total", menu.quotedCost()), 8, 50,
+                g.drawString(font, Component.translatable("menu.tnkloot.total", menu.quotedCost(), Component.translatable(menu.currency().getDescriptionId())), 8, 50,
                     menu.busy() || menu.affordable() ? 0x285A25 : 0xAA3333, false);
         } else {
             var tiers = menu.displayTiers();

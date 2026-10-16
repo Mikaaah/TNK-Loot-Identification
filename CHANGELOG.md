@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.6.0-alpha
+
+- Replace inventory-search identification with a vanilla-style one-row counter: seven token slots and a cost-confirmation button.
+- Reveal each paid item through all eligible base-item previews, with slowing note-block ticks and a reveal chime.
+- Prepare batches atomically, lock inventory operations while rolling, and return final results on close/disconnect/death.
+- Remove handheld right-click identification and its admin-button bypass.
+- Protect tagged identifier villagers from creative and survival attacks, repair legacy attendants, fix counter-relative placement/facing, and add arrival/departure particles.
+- Replace reflective Apotheosis integration with its required typed API, deterministic affix rolls, and failure-before-payment behavior.
+- Supply 23 real Apotheosis affix definitions with values for all custom rarities and seven graduated rarity presets.
+- Improve default armor/tool material ranges, preserving existing configs.
+- Add live dedicated-server checks for tier/category affixes, batch payment and close, and villager lifecycle.
+
+## 0.5.0-alpha
+
+- Add identifier and operator menus, configurable rarity mappings and tier/pool editing.
+
+
 ## 0.4.0-alpha
 
 - Add separate unidentified tokens for weapons, bows, helmets, chestplates, leggings, boots, tools and accessories.

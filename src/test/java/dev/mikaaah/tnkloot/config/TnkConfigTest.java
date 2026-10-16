@@ -20,7 +20,7 @@ class TnkConfigTest {
         assertEquals(3, cfg.tierForName("EXPLORER").orElseThrow().rank());
         assertEquals("tnkloot:ancient", cfg.tierForName("legendary").orElseThrow().apotheosisRarity().toString());
         assertTrue(cfg.replaceWeaponLoot());
-        assertTrue(cfg.handheldIdentification());
+        assertFalse(cfg.handheldIdentification());
         assertTrue(cfg.stationIdentification());
         assertEquals(TnkConfig.Category.WEAPON, cfg.weapons().getFirst().category());
         assertEquals(25, cfg.costs().amount(7, "minecraft:diamond_sword"));

@@ -31,7 +31,7 @@
   "menu.tnkloot.editor": "T&K Tier Editor",
   "menu.tnkloot.insert": "Insert up to 7 items",
   "menu.tnkloot.rolling": "Identifying...",
-  "menu.tnkloot.total": "Total cost: %s",
+  "menu.tnkloot.total": "Total: %s %s",
   "menu.tnkloot.confirm": "Identify %s item(s) for %s %s",
   "message.tnkloot.batch_unavailable": "Cannot identify: check your items, currency and server settings.",
   "message.tnkloot.affix_failed": "Identification failed: an item or affix pool is invalid. No items or currency were consumed; ask an administrator to check the server log.",
