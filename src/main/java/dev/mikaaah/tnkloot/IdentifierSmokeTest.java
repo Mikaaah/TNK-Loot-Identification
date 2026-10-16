@@ -79,7 +79,7 @@ public final class IdentifierSmokeTest {
             completed.clickMenuButton(player, 0);
             long clock = server.overworld().getGameTime();
             for (int tick = 0; tick < 400 && completed.busy(); tick++) {
-                server.overworld().setGameTime(clock + tick + 1);
+                server.getWorldData().overworldData().setGameTime(clock + tick + 1);
                 completed.broadcastChanges();
             }
             require(!completed.busy(), "Roll animation never finished");
@@ -87,7 +87,7 @@ public final class IdentifierSmokeTest {
                 .getOrDefault(Apoth.Components.AFFIXES, ItemAffixes.EMPTY).size() > 0, "Animation stopped on a preview");
             completed.removed(player);
             require(player.getInventory().items.stream().mapToInt(ItemStack::getCount).sum() == 7, "Completed roll lost results");
-            server.overworld().setGameTime(clock);
+            server.getWorldData().overworldData().setGameTime(clock);
             BlockPos pos = new BlockPos(8, 100, 8);
             var block = TnkLoot.IDENTIFIER_BLOCK.get();
             var state = block.defaultBlockState();
