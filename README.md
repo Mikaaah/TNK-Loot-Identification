@@ -5,8 +5,6 @@ Configurable unidentified weapons and Guild progression for **Minecraft 1.21.1 /
 [![Build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml/badge.svg)](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml)
 [Issues](https://github.com/Mikaaah/TNK-Loot-Identification/issues) · [Configuration](docs/configuration.md) · [FTB Quests setup](examples/ftb-quests-reward-guide.md)
 
-**Download:** [tnkloot-0.2.0-alpha.jar](https://github.com/Mikaaah/TNK-Loot-Identification/raw/refs/heads/main/downloads/tnkloot-0.2.0-alpha.jar)
-
 A weapon token records a Guild tier when awarded. Right-click it to identify a weighted weapon from that tier. The result is the original registered item, preserving its normal mod behavior and moveset integrations. This mod does not change item crafting or who can equip a weapon.
 
 ## Installation and quick start
