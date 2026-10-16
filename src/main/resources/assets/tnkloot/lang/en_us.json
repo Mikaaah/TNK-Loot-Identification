@@ -26,5 +26,7 @@
   "message.tnkloot.station_disabled": "Station identification is disabled.",
   "message.tnkloot.station_instruction": "Hold an unidentified item and use it on the identifier.",
   "block.tnkloot.identifier": "Identifier",
-  "entity.tnkloot.identifier": "Guild Identifier"
+  "entity.tnkloot.identifier": "Guild Identifier",
+  "menu.tnkloot.identifier": "Guild Identifier",
+  "menu.tnkloot.editor": "T&K Tier Editor"
 }

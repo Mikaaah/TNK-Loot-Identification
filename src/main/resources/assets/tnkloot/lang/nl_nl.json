@@ -26,5 +26,7 @@
   "message.tnkloot.station_disabled": "Identificatie via het station is uitgeschakeld.",
   "message.tnkloot.station_instruction": "Houd een onbekend voorwerp vast en gebruik het op de identificator.",
   "block.tnkloot.identifier": "Identificator",
-  "entity.tnkloot.identifier": "Gilde-identificator"
+  "entity.tnkloot.identifier": "Gilde-identificator",
+  "menu.tnkloot.identifier": "Gilde-identificator",
+  "menu.tnkloot.editor": "T&K-tiereditor"
 }

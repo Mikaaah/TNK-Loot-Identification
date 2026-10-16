@@ -5,7 +5,7 @@ Configurable unidentified weapons, armor and tools with Guild progression for **
 [![Build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml/badge.svg)](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml)
 [Issues](https://github.com/Mikaaah/TNK-Loot-Identification/issues) · [Configuration](docs/configuration.md) · [FTB Quests setup](examples/ftb-quests-reward-guide.md)
 
-**Download:** [tnkloot-0.4.0-alpha.jar](https://github.com/Mikaaah/TNK-Loot-Identification/raw/refs/heads/main/downloads/tnkloot-0.4.0-alpha.jar)
+**Download:** [tnkloot-0.5.0-alpha.jar](https://github.com/Mikaaah/TNK-Loot-Identification/raw/refs/heads/main/downloads/tnkloot-0.5.0-alpha.jar)
 
 Each category token records its Guild tier and a stable roll seed when awarded. Right-click it or use it on the Identifier block to reveal the original registered item, preserving its normal mod behavior and moveset integrations. This mod does not change item crafting or who can equip an item.
 
@@ -54,7 +54,7 @@ Use an explicit player name when running from the server console. Unidentified i
 - Numeric tier ranks are save identities. Renaming a tier is safe; renumbering ranks changes the meaning of existing player data and tokens. Back up the world before changing rank assignments.
 - Client tooltips use the tier name stored on awarded tokens. Server configuration determines redemption; clients do not need a copy of the server's weapon configuration.
 
-Configured equipment IDs are replaced by matching category tokens in mob drops, boss rewards, structure chests and modded loot tables. The default config covers vanilla swords, bows, armor and tools, with emerald costs from 1 to 25 per tier. Prices can be customized by tier and item. The Identifier block spawns a stationary attendant and identifies tokens when used on the counter. Apotheosis rarity and affixes are applied during identification. Pools and costs are configured in JSON and reloaded with `/tnkloot reload`; an operator GUI for editing tier pools is still future work. FTB Teams integration still needs validation against the pack's exact installed version. Token icons currently use vanilla placeholder art until custom textures are provided.
+Configured equipment IDs are replaced by matching category tokens in mob drops, boss rewards, structure chests and modded loot tables. The default config covers vanilla swords, bows, armor and tools, with emerald costs from 1 to 25 per tier. Prices can be customized by tier and item. The Identifier block spawns a stationary attendant and identifies tokens when used on the counter. Apotheosis rarity and affixes are applied during identification. Pools and costs are configured in JSON and reloaded with `/tnkloot reload`; Operators can use /tnkloot editor to manage tier rarity mappings and equipment pools in game; tier names, IDs and advancement unlocks remain editable in JSON. FTB Teams integration still needs validation against the pack's exact installed version. Token icons currently use vanilla placeholder art until custom textures are provided.
 
 ## Development
 
@@ -64,6 +64,6 @@ Use Java 21:
 ./gradlew build
 ```
 
-Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.4.0-alpha.jar`. The `-sources.jar` is for development, not installation. Tests cover config validation/atomic reloads, category pools, identification prices, weighted selection and progression persistence. GitHub Actions runs the same build with the required Apotheosis development runtime.
+Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.5.0-alpha.jar`. The `-sources.jar` is for development, not installation. Tests cover config validation/atomic reloads, category pools, identification prices, weighted selection and progression persistence. GitHub Actions runs the same build with the required Apotheosis development runtime.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md). All rights reserved, matching the original project metadata.

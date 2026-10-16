@@ -20,6 +20,10 @@ public final class TnkCommands {
 
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("tnkloot")
+            .then(Commands.literal("editor").requires(source -> source.hasPermission(2)).executes(ctx -> {
+                dev.mikaaah.tnkloot.menu.TnkMenuProvider.openEditor(ctx.getSource().getPlayerOrException());
+                return 1;
+            }))
             .then(Commands.literal("tier")
                 .executes(ctx -> {
                     ServerPlayer p = ctx.getSource().getPlayerOrException();

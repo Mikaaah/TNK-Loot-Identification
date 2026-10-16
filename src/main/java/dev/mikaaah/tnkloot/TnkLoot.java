@@ -7,6 +7,8 @@ import dev.mikaaah.tnkloot.config.TnkConfig.Category;
 import dev.mikaaah.tnkloot.loot.WeaponLootModifier;
 import dev.mikaaah.tnkloot.loot.IdentifierBlock;
 import dev.mikaaah.tnkloot.progression.ProgressionEvents;
+import dev.mikaaah.tnkloot.menu.TnkMenus;
+import dev.mikaaah.tnkloot.loot.IdentifierInteractions;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -51,9 +53,11 @@ public final class TnkLoot {
         ITEMS.register(modBus);
         BLOCKS.register(modBus);
         LOOT_MODIFIER_SERIALIZERS.register(modBus);
+        TnkMenus.MENUS.register(modBus);
         TnkConfig.reload();
         NeoForge.EVENT_BUS.addListener(ProgressionEvents::onAdvancement);
         NeoForge.EVENT_BUS.addListener(ProgressionEvents::onLogin);
         NeoForge.EVENT_BUS.addListener(TnkCommands::register);
+        NeoForge.EVENT_BUS.addListener(IdentifierInteractions::onEntityInteract);
     }
 }

@@ -60,11 +60,106 @@ public final class TnkConfig {
         }
     }
 
+    /** Persist an editor change only after the same strict parser accepts the complete candidate. */
+    public static synchronized boolean editTier(int rank, String name, ResourceLocation rarity) {
+        Settings s = current;
+        List<Tier> tiers = new ArrayList<>(s.tiers());
+        int index = -1;
+        for (int i = 0; i < tiers.size(); i++) if (tiers.get(i).rank() == rank) index = i;
+        if (index < 0) return false;
+        Tier old = tiers.get(index);
+        tiers.set(index, new Tier(old.rank(), old.id(), name == null ? old.name() : name,
+            old.advancements(), rarity == null ? old.apotheosisRarity() : rarity));
+        return save(replace(s, tiers, s.weapons()));
+    }
+
+    public static synchronized boolean addTier(String id, String name, ResourceLocation rarity) {
+        Settings s = current;
+        int rank = s.highestTier() + 1;
+        List<Tier> tiers = new ArrayList<>(s.tiers());
+        tiers.add(new Tier(rank, id, name, List.of(), rarity));
+        List<Weapon> weapons = new ArrayList<>(s.weapons());
+        for (Category c : weapons.stream().map(Weapon::category).distinct().toList()) {
+            Weapon template = weapons.stream().filter(w -> w.category() == c).findFirst().orElseThrow();
+            weapons.add(new Weapon(template.id(), c, rank, rank, template.weight()));
+        }
+        return save(replace(s, tiers, weapons));
+    }
+
+    public static synchronized boolean addWeaponToTier(String item, Category category, int rank) {
+        Settings s = current;
+        List<Weapon> weapons = new ArrayList<>(s.weapons());
+        weapons.removeIf(w -> w.category() == category && w.minTier() == rank && w.maxTier() == rank && w.id().equals(item));
+        weapons.add(new Weapon(item, category, rank, rank, 1));
+        return save(replace(s, s.tiers(), weapons));
+    }
+
+    public static synchronized boolean removeWeaponFromTier(String item, Category category, int rank) {
+        Settings s = current;
+        List<Weapon> weapons = new ArrayList<>(s.weapons());
+        boolean removed = weapons.removeIf(w -> w.category() == category && w.minTier() == rank && w.maxTier() == rank && w.id().equals(item));
+        return removed && save(replace(s, s.tiers(), weapons));
+    }
+
+    private static Settings replace(Settings s, List<Tier> tiers, List<Weapon> weapons) {
+        return new Settings(s.mode(), s.shareFtbTeams(), s.enableIdentification(), s.replaceWeaponLoot(),
+            s.handheldIdentification(), s.stationIdentification(), List.copyOf(tiers), List.copyOf(weapons), s.costs());
+    }
+
+    private static boolean save(Settings candidate) {
+        try {
+            JsonObject root = new JsonObject();
+            root.addProperty("progression_mode", candidate.mode().name());
+            root.addProperty("share_ftb_teams", candidate.shareFtbTeams());
+            root.addProperty("identification_enabled", candidate.enableIdentification());
+            root.addProperty("replace_weapon_loot", candidate.replaceWeaponLoot());
+            root.addProperty("handheld_identification", candidate.handheldIdentification());
+            root.addProperty("station_identification", candidate.stationIdentification());
+            JsonObject costs = new JsonObject();
+            costs.addProperty("enabled", candidate.costs().enabled()); costs.addProperty("item", candidate.costs().item());
+            costs.addProperty("default", candidate.costs().defaultAmount());
+            JsonObject perTier = new JsonObject(); candidate.costs().tierAmounts().forEach((k,v) -> perTier.addProperty(k.toString(), v));
+            JsonObject perItem = new JsonObject(); candidate.costs().itemAmounts().forEach((k,v) -> perItem.addProperty(k, v));
+            costs.add("per_tier", perTier); costs.add("per_item", perItem); root.add("identification_costs", costs);
+            JsonArray tierArray = new JsonArray();
+            candidate.tiers().forEach(t -> {
+                JsonObject o = new JsonObject(); o.addProperty("rank", t.rank()); o.addProperty("id", t.id()); o.addProperty("name", t.name());
+                JsonArray adv = new JsonArray(); t.advancements().forEach(a -> adv.add(a.toString()));
+                o.add("advancements", adv); o.addProperty("apotheosis_rarity", t.apotheosisRarity().toString()); tierArray.add(o);
+            }); root.add("tiers", tierArray);
+            JsonArray weaponArray = new JsonArray();
+            candidate.weapons().forEach(w -> {
+                JsonObject o = new JsonObject(); o.addProperty("item", w.id()); o.addProperty("category", w.category().name().toLowerCase(Locale.ROOT));
+                o.addProperty("min_tier", w.minTier()); o.addProperty("max_tier", w.maxTier()); o.addProperty("weight", w.weight()); weaponArray.add(o);
+            }); root.add("weapons", weaponArray);
+            Settings validated = parse(new GsonBuilder().setPrettyPrinting().create().toJson(root));
+            Path target = path(); Files.createDirectories(target.toAbsolutePath().getParent());
+            Path tmp = target.resolveSibling("tiers.json.tmp");
+            Files.writeString(tmp, new GsonBuilder().setPrettyPrinting().create().toJson(root), StandardCharsets.UTF_8);
+            Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            current = validated; return true;
+        } catch (Exception ex) { TnkLoot.LOG.error("Could not save tier editor changes: {}", ex.getMessage()); return false; }
+    }
+
     public static String defaultJson() throws IOException {
         try (var stream = TnkConfig.class.getResourceAsStream("/default-tiers.json")) {
             if (stream == null) throw new IOException("Bundled default-tiers.json missing");
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         }
+    }
+
+    public static String tierSnapshot() {
+        JsonArray array = new JsonArray();
+        current.tiers().forEach(t -> { JsonObject o = new JsonObject(); o.addProperty("rank", t.rank()); o.addProperty("id", t.id()); o.addProperty("name", t.name()); o.addProperty("apotheosis_rarity", t.apotheosisRarity().toString()); array.add(o); });
+        return array.toString();
+    }
+    public static List<Tier> parseTierSnapshot(String json) {
+        List<Tier> result = new ArrayList<>();
+        for (JsonElement e : JsonParser.parseString(json).getAsJsonArray()) {
+            JsonObject o = e.getAsJsonObject();
+            result.add(new Tier(o.get("rank").getAsInt(), o.get("id").getAsString(), o.get("name").getAsString(), List.of(), ResourceLocation.parse(o.get("apotheosis_rarity").getAsString())));
+        }
+        return List.copyOf(result);
     }
 
     /** Strict parsing prevents a typo from silently deleting a tier or emptying a loot pool. */

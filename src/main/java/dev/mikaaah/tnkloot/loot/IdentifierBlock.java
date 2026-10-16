@@ -29,18 +29,14 @@ public final class IdentifierBlock extends Block {
             serverPlayer.sendSystemMessage(Component.translatable("message.tnkloot.station_disabled"));
             return ItemInteractionResult.FAIL;
         }
-        if (!(held.getItem() instanceof UnidentifiedWeaponItem)) {
-            serverPlayer.sendSystemMessage(Component.translatable("message.tnkloot.station_instruction"));
-            return ItemInteractionResult.SUCCESS;
-        }
-        var result = UnidentifiedWeaponItem.identify(level, serverPlayer, hand, held);
-        if (result.getResult().consumesAction()) serverPlayer.setItemInHand(hand, result.getObject());
+        dev.mikaaah.tnkloot.menu.TnkMenuProvider.openIdentifier(serverPlayer);
         return ItemInteractionResult.SUCCESS;
     }
 
     @Override public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
             net.minecraft.world.entity.player.Player player, BlockHitResult hit) {
-        if (!level.isClientSide) player.displayClientMessage(Component.translatable("message.tnkloot.station_instruction"), true);
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer && dev.mikaaah.tnkloot.config.TnkConfig.get().stationIdentification())
+            dev.mikaaah.tnkloot.menu.TnkMenuProvider.openIdentifier(serverPlayer);
         return InteractionResult.SUCCESS;
     }
 

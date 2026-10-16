@@ -58,6 +58,8 @@ Costs are charged from the player's inventory and offhand. Per-item prices overr
 
 ## Identifier block
 
-Craft or grant `tnkloot:identifier`. Place it to spawn an invulnerable, no-AI Guild Identifier beside the counter. Use an unidentified token on the block to identify it using the same cost rules as handheld use. Breaking the block removes its attendant. The block is usable on a dedicated server; it does not require a client-side GUI screen.
+Craft or grant `tnkloot:identifier`. Place it to spawn an invulnerable, no-AI Guild Identifier beside the counter. Right-click either the block or its attendant to open the identification screen; keep the token in your inventory and select Identify. The same cost rules apply as handheld use. Breaking the block removes its attendant.
+
+Operators can run `/tnkloot editor` in game to open the tier editor. Navigate configured ranks, cycle the Apotheosis rarity mapping, add or remove the held item from a tier, and create a new tier. Changes are validated and written to `config/tnkloot/tiers.json` immediately. The editor generates new IDs and names for tiers; edit `id`, `name`, or `advancements` in JSON and run `/tnkloot reload` for those fields.
 
 Apotheosis is a required runtime dependency. Install Apotheosis 1.21.1-8.9.0 or newer together with its required mods: Placebo, Apothic Attributes, Apothic Spawners, Apothic Enchanting and Patchouli. For each tier, `apotheosis_rarity` must match a rarity registered by Apotheosis or a datapack. Identification applies Apotheosis' normal rarity rules and affixes to eligible selected items. If a configured rarity is unavailable, the mod logs one warning and safely returns the base item without affixes.
