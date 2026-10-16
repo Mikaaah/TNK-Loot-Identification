@@ -52,6 +52,7 @@ public final class UnidentifiedWeaponItem extends Item {
             serverPlayer.sendSystemMessage(Component.translatable("message.tnkloot.empty_pool", rank));
             return InteractionResultHolder.fail(stack);
         }
+        result = ApotheosisCompat.apply(result, rank, serverPlayer);
         serverPlayer.sendSystemMessage(Component.translatable("message.tnkloot.identified", result.getHoverName()).withStyle(ChatFormatting.GREEN));
         if (stack.getCount() == 1) return InteractionResultHolder.success(result);
         // Also preserve extra tokens if a command overrides the normal stack size.

@@ -5,13 +5,13 @@ Configurable unidentified weapons and Guild progression for **Minecraft 1.21.1 /
 [![Build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml/badge.svg)](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml)
 [Issues](https://github.com/Mikaaah/TNK-Loot-Identification/issues) · [Configuration](docs/configuration.md) · [FTB Quests setup](examples/ftb-quests-reward-guide.md)
 
-**Download:** [tnkloot-0.2.0-alpha.jar](https://github.com/Mikaaah/TNK-Loot-Identification/raw/refs/heads/main/downloads/tnkloot-0.2.0-alpha.jar)
+**Download:** [tnkloot-0.3.0-alpha.jar](https://github.com/Mikaaah/TNK-Loot-Identification/raw/refs/heads/main/downloads/tnkloot-0.3.0-alpha.jar)
 
 A weapon token records a Guild tier when awarded. Right-click it to identify a weighted weapon from that tier. The result is the original registered item, preserving its normal mod behavior and moveset integrations. This mod does not change item crafting or who can equip a weapon.
 
 ## Installation and quick start
 
-Install the compiled `tnkloot` JAR on **both client and server**, with Java 21 and NeoForge **21.1.262 or newer** for Minecraft 1.21.1. FTB Quests, FTB Teams and KubeJS are optional.
+Install the compiled `tnkloot` JAR on **both client and server**, with Java 21 and NeoForge **21.1.262 or newer** for Minecraft 1.21.1. Apotheosis, FTB Quests and FTB Teams are optional.
 
 1. Start a world/server once to generate `config/tnkloot/tiers.json`.
 2. Edit the tiers and weapon pools. See [the configuration guide](docs/configuration.md).
@@ -54,7 +54,7 @@ Use an explicit player name when running from the server console. Unidentified i
 - Numeric tier ranks are save identities. Renaming a tier is safe; renumbering ranks changes the meaning of existing player data and tokens. Back up the world before changing rank assignments.
 - Client tooltips use the tier name stored on awarded tokens. Server configuration determines redemption; clients do not need a copy of the server's weapon configuration.
 
-This alpha provides token identification and progression. Automatic chest/mob loot replacement, Apotheosis rarity/affix generation, a custom FTB Quests reward type and an identification GUI are **not implemented**. FTB Teams multiplayer integration still needs validation against the pack's exact installed version. The token currently uses a vanilla placeholder model.
+Configured weapon IDs can now be replaced with tier-stamped tokens in entity, chest and other generated loot by enabling `replace_weapon_loot`. Each progression tier maps to an Apotheosis rarity, and identified weapons receive native Apotheosis affixes when that mod is installed. FTB Quests remains optional through command rewards; a custom FTB reward type and identification GUI are not implemented. FTB Teams multiplayer integration still needs validation against the pack's exact installed version. The token currently uses a vanilla placeholder model.
 
 ## Development
 
@@ -64,6 +64,6 @@ Use Java 21:
 ./gradlew build
 ```
 
-Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.2.0-alpha.jar`. The `-sources.jar` is for development, not installation. Tests cover config validation/atomic reloads, weighted selection and progression persistence. GitHub Actions runs the same build.
+Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.3.0-alpha.jar`. The `-sources.jar` is for development, not installation. Tests cover config validation/atomic reloads, weighted selection, progression persistence and optional integration settings. GitHub Actions runs the same build.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md). All rights reserved, matching the original project metadata.

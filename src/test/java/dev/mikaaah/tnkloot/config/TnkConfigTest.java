@@ -17,6 +17,8 @@ class TnkConfigTest {
         assertEquals("novice", cfg.tierForRank(-1).id());
         assertEquals("legendary", cfg.tierForRank(100).id());
         assertEquals(3, cfg.tierForName("EXPLORER").orElseThrow().rank());
+        assertEquals("apotheosis:mythic", cfg.tierForName("legendary").orElseThrow().apotheosisRarity().toString());
+        assertFalse(cfg.replaceWeaponLoot());
         assertThrows(UnsupportedOperationException.class, () -> cfg.weapons().clear());
     }
     @Test void rejectsBrokenEntriesAndTypos() throws Exception {
@@ -62,5 +64,12 @@ class TnkConfigTest {
         var disabled = TnkConfig.parse(config.replace("{\"tiers\"", "{\"identification_enabled\":false,\"tiers\""));
         assertEquals(0, disabled.tierForRank(8).rank());
         assertEquals(10, disabled.tierForRank(999).rank());
+    }
+
+    @Test void lootReplacementIsOptInAndRarityIdsAreValidated() throws Exception {
+        String config = defaults().replace("\"replace_weapon_loot\": false", "\"replace_weapon_loot\": true");
+        assertTrue(TnkConfig.parse(config).replaceWeaponLoot());
+        assertThrows(IllegalArgumentException.class, () -> TnkConfig.parse(
+            config.replace("apotheosis:common", "bad rarity id")));
     }
 }

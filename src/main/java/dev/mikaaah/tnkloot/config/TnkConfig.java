@@ -13,9 +13,9 @@ import java.util.*;
 /** Server-owned, immutable definitions. A failed reload never partially changes live settings. */
 public final class TnkConfig {
     public enum Mode { ADVANCEMENTS, FTB_QUESTS, MANUAL, OFF }
-    public record Tier(int rank, String id, String name, List<ResourceLocation> advancements) {}
+    public record Tier(int rank, String id, String name, List<ResourceLocation> advancements, ResourceLocation apotheosisRarity) {}
     public record Weapon(String id, int minTier, int maxTier, int weight) {}
-    public record Settings(Mode mode, boolean shareFtbTeams, boolean enableIdentification,
+    public record Settings(Mode mode, boolean shareFtbTeams, boolean enableIdentification, boolean replaceWeaponLoot,
                            List<Tier> tiers, List<Weapon> weapons) {
         public int highestTier() { return tiers.getLast().rank(); }
         public Optional<Tier> tierForName(String id) { return tiers.stream().filter(t -> t.id().equalsIgnoreCase(id)).findFirst(); }
@@ -25,8 +25,8 @@ public final class TnkConfig {
         }
     }
 
-    private static volatile Settings current = new Settings(Mode.MANUAL, false, false,
-        List.of(new Tier(0, "novice", "Novice", List.of())), List.of());
+    private static volatile Settings current = new Settings(Mode.MANUAL, false, false, false,
+        List.of(new Tier(0, "novice", "Novice", List.of(), ResourceLocation.withDefaultNamespace("common"))), List.of());
     private TnkConfig() {}
     public static Settings get() { return current; }
     public static Path path() { return FMLPaths.CONFIGDIR.get().resolve("tnkloot/tiers.json"); }
@@ -56,16 +56,17 @@ public final class TnkConfig {
     /** Strict parsing prevents a typo from silently deleting a tier or emptying a loot pool. */
     public static Settings parse(String json) {
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
-        keys(root, "progression_mode", "share_ftb_teams", "identification_enabled", "tiers", "weapons");
+        keys(root, "progression_mode", "share_ftb_teams", "identification_enabled", "replace_weapon_loot", "tiers", "weapons");
         Mode mode = Mode.valueOf(string(root, "progression_mode", "ADVANCEMENTS").toUpperCase(Locale.ROOT));
         boolean share = bool(root, "share_ftb_teams", true);
         boolean identification = bool(root, "identification_enabled", true);
+        boolean replaceWeaponLoot = bool(root, "replace_weapon_loot", false);
         List<Tier> tiers = new ArrayList<>();
         Set<Integer> ranks = new HashSet<>();
         Set<String> ids = new HashSet<>();
         for (JsonElement element : root.getAsJsonArray("tiers")) {
             JsonObject e = element.getAsJsonObject();
-            keys(e, "rank", "id", "name", "advancements");
+            keys(e, "rank", "id", "name", "advancements", "apotheosis_rarity");
             int rank = integer(e, "rank", null);
             String id = string(e, "id", null).toLowerCase(Locale.ROOT);
             if (rank < 0 || rank == Integer.MAX_VALUE || !id.matches("[a-z0-9_]+") || !ranks.add(rank) || !ids.add(id))
@@ -80,7 +81,10 @@ public final class TnkConfig {
             }
             String name = string(e, "name", id);
             if (name.isBlank()) throw new IllegalArgumentException("Tier name cannot be blank");
-            tiers.add(new Tier(rank, id, name, List.copyOf(advancements)));
+            String rarityValue = string(e, "apotheosis_rarity", defaultApotheosisRarity(rank));
+            ResourceLocation apotheosisRarity = ResourceLocation.tryParse(rarityValue);
+            if (apotheosisRarity == null) throw new IllegalArgumentException("Invalid Apotheosis rarity ID: " + rarityValue);
+            tiers.add(new Tier(rank, id, name, List.copyOf(advancements), apotheosisRarity));
         }
         tiers.sort(Comparator.comparingInt(Tier::rank));
         if (tiers.isEmpty() || tiers.getFirst().rank() != 0) throw new IllegalArgumentException("A rank-0 tier is required");
@@ -100,7 +104,17 @@ public final class TnkConfig {
             if (weapons.stream().noneMatch(w -> tier.rank() >= w.minTier() && tier.rank() <= w.maxTier()))
                 throw new IllegalArgumentException("No configured weapons for tier " + tier.id());
         }
-        return new Settings(mode, share, identification, List.copyOf(tiers), List.copyOf(weapons));
+        return new Settings(mode, share, identification, replaceWeaponLoot, List.copyOf(tiers), List.copyOf(weapons));
+    }
+
+    private static String defaultApotheosisRarity(int rank) {
+        return switch (rank) {
+            case 0 -> "apotheosis:common";
+            case 1 -> "apotheosis:uncommon";
+            case 2 -> "apotheosis:rare";
+            case 3, 4 -> "apotheosis:epic";
+            default -> "apotheosis:mythic";
+        };
     }
 
     private static void keys(JsonObject object, String... allowed) {
