@@ -88,13 +88,14 @@ public final class IdentifierSmokeTest {
             completed.removed(player);
             require(player.getInventory().items.stream().mapToInt(ItemStack::getCount).sum() == 7, "Completed roll lost results");
             server.getWorldData().overworldData().setGameTime(clock);
-            BlockPos pos = new BlockPos(8, 100, 8);
+            BlockPos pos = server.overworld().getSharedSpawnPos().above(10);
             var block = TnkLoot.IDENTIFIER_BLOCK.get();
             var state = block.defaultBlockState();
             server.overworld().setBlockAndUpdate(pos, state);
             block.setPlacedBy(server.overworld(), pos, state, player, new ItemStack(TnkLoot.IDENTIFIER_ITEM.get()));
             var npcs = server.overworld().getEntitiesOfClass(Villager.class, new AABB(pos).inflate(2), IdentifierInteractions::isIdentifier);
-            require(npcs.size() == 1 && npcs.getFirst().isInvulnerable(), "Identifier not protected");
+            require(npcs.size() == 1, "Expected one identifier in active spawn chunk, found " + npcs.size());
+            require(npcs.getFirst().isInvulnerable(), "Identifier not protected");
             require(Math.abs(npcs.getFirst().getYRot() - state.getValue(IdentifierBlock.FACING).toYRot()) < 0.01, "Identifier facing mismatch");
             server.overworld().removeBlock(pos, false);
             require(npcs.getFirst().isRemoved(), "Identifier not removed with counter");
