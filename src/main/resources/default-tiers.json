@@ -1,0 +1,101 @@
+{
+  "progression_mode": "ADVANCEMENTS",
+  "share_ftb_teams": true,
+  "identification_enabled": true,
+  "tiers": [
+    {
+      "rank": 0,
+      "id": "novice",
+      "name": "Novice",
+      "advancements": []
+    },
+    {
+      "rank": 1,
+      "id": "apprentice",
+      "name": "Apprentice",
+      "advancements": [
+        "minecraft:story/upgrade_tools"
+      ]
+    },
+    {
+      "rank": 2,
+      "id": "adventurer",
+      "name": "Adventurer",
+      "advancements": [
+        "minecraft:story/smelt_iron"
+      ]
+    },
+    {
+      "rank": 3,
+      "id": "explorer",
+      "name": "Explorer",
+      "advancements": [
+        "minecraft:story/mine_diamond"
+      ]
+    },
+    {
+      "rank": 4,
+      "id": "veteran",
+      "name": "Veteran",
+      "advancements": [
+        "minecraft:story/enter_the_nether"
+      ]
+    },
+    {
+      "rank": 5,
+      "id": "champion",
+      "name": "Champion",
+      "advancements": [
+        "minecraft:nether/obtain_blaze_rod"
+      ]
+    },
+    {
+      "rank": 6,
+      "id": "hero",
+      "name": "Hero",
+      "advancements": [
+        "minecraft:nether/summon_wither"
+      ]
+    },
+    {
+      "rank": 7,
+      "id": "legendary",
+      "name": "Legendary",
+      "advancements": [
+        "minecraft:end/kill_dragon"
+      ]
+    }
+  ],
+  "weapons": [
+    {
+      "item": "minecraft:wooden_sword",
+      "min_tier": 0,
+      "max_tier": 1,
+      "weight": 5
+    },
+    {
+      "item": "minecraft:stone_sword",
+      "min_tier": 1,
+      "max_tier": 2,
+      "weight": 5
+    },
+    {
+      "item": "minecraft:iron_sword",
+      "min_tier": 2,
+      "max_tier": 3,
+      "weight": 5
+    },
+    {
+      "item": "minecraft:diamond_sword",
+      "min_tier": 3,
+      "max_tier": 6,
+      "weight": 3
+    },
+    {
+      "item": "minecraft:netherite_sword",
+      "min_tier": 6,
+      "max_tier": 7,
+      "weight": 2
+    }
+  ]
+}

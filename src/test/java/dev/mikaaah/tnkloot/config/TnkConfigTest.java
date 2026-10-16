@@ -1,0 +1,66 @@
+package dev.mikaaah.tnkloot.config;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import static org.junit.jupiter.api.Assertions.*;
+
+class TnkConfigTest {
+    @TempDir Path directory;
+    private String defaults() throws Exception { return TnkConfig.defaultJson(); }
+
+    @Test void bundledDefaultsHaveEightCoveredTiers() throws Exception {
+        var cfg = TnkConfig.parse(defaults());
+        assertEquals(8, cfg.tiers().size());
+        assertEquals(7, cfg.highestTier());
+        assertEquals("novice", cfg.tierForRank(-1).id());
+        assertEquals("legendary", cfg.tierForRank(100).id());
+        assertEquals(3, cfg.tierForName("EXPLORER").orElseThrow().rank());
+        assertThrows(UnsupportedOperationException.class, () -> cfg.weapons().clear());
+    }
+    @Test void rejectsBrokenEntriesAndTypos() throws Exception {
+        String base = defaults();
+        for (String bad : new String[] {
+            base.replace("\"rank\": 1", "\"rank\": 0"),
+            base.replace("\"id\": \"apprentice\"", "\"id\": \"novice\""),
+            base.replace("\"weight\": 5", "\"weight\": 0"),
+            base.replace("\"weight\": 5", "\"weight\": 1.5"),
+            base.replace("\"weight\": 5", "\"weight\": 4294967296"),
+            base.replace("\"weight\": 5", "\"weight\": \"5\""),
+            base.replace("\"share_ftb_teams\": true", "\"share_ftb_teams\": \"true\""),
+            base.replace("minecraft:wooden_sword", "Bad ID!"),
+            base.replace("minecraft:story/upgrade_tools", "Bad ID!"),
+            base.replace("\"weight\"", "\"wieght\""),
+            base.replace("\"rank\": 0", "\"rank\": -1"),
+            base.replace("\"progression_mode\": \"ADVANCEMENTS\"", "\"progression_mode\": \"UNKNOWN\"")
+        }) assertThrows(RuntimeException.class, () -> TnkConfig.parse(bad), bad);
+    }
+    @Test void reloadIsAtomicAndGeneratesDefaults() throws Exception {
+        Path file = directory.resolve("nested/tiers.json");
+        assertTrue(TnkConfig.reload(file));
+        var previous = TnkConfig.get();
+        Files.writeString(file, defaults().replace("\"weight\": 5", "\"weight\": -1"));
+        assertFalse(TnkConfig.reload(file));
+        assertSame(previous, TnkConfig.get());
+        Files.writeString(file, "{broken");
+        assertFalse(TnkConfig.reload(file));
+        assertSame(previous, TnkConfig.get());
+    }
+    @Test void modesAndOptionalItemsRequireNoFtbDependency() throws Exception {
+        for (var mode : TnkConfig.Mode.values()) {
+            var cfg = TnkConfig.parse(defaults().replace("ADVANCEMENTS", mode.name()).replace("minecraft:wooden_sword", "optionalmod:blade"));
+            assertEquals(mode, cfg.mode());
+        }
+    }
+    @Test void rejectsUncoveredTierUnlessIdentificationDisabled() throws Exception {
+        String config = """
+            {"tiers":[{"rank":0,"id":"start"},{"rank":10,"id":"end"}],
+             "weapons":[{"item":"minecraft:wooden_sword","min_tier":0,"max_tier":0}]}
+            """;
+        assertThrows(IllegalArgumentException.class, () -> TnkConfig.parse(config));
+        var disabled = TnkConfig.parse(config.replace("{\"tiers\"", "{\"identification_enabled\":false,\"tiers\""));
+        assertEquals(0, disabled.tierForRank(8).rank());
+        assertEquals(10, disabled.tierForRank(999).rank());
+    }
+}

@@ -1,0 +1,9 @@
+{
+  "item.tnkloot.unidentified_weapon": "Unidentified Weapon",
+  "tooltip.tnkloot.tier": "Guild Tier %s — %s",
+  "tooltip.tnkloot.identify": "Right-click to identify",
+  "message.tnkloot.disabled": "Identification is disabled.",
+  "message.tnkloot.empty_pool": "No available weapon for tier %s. Ask an administrator to run /tnkloot validate.",
+  "message.tnkloot.identified": "[Guild] Identified: %s",
+  "message.tnkloot.unlocked": "[Guild] Unlocked tier %s — %s"
+}

@@ -1,0 +1,27 @@
+name: Bug report
+description: Report an identification, progression or configuration problem
+labels: [bug]
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include what you expected and steps to reproduce.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Minecraft, NeoForge and mod versions
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration and validation output
+      description: Include tiers.json and the output of /tnkloot validate, when relevant.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and optional mods
+      description: Link relevant logs and list FTB or weapon mods involved. Remove private information.

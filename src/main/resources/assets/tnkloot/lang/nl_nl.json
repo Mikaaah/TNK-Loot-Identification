@@ -1,0 +1,9 @@
+{
+  "item.tnkloot.unidentified_weapon": "Ongeïdentificeerd wapen",
+  "tooltip.tnkloot.tier": "Gilderang %s — %s",
+  "tooltip.tnkloot.identify": "Rechtermuisknop om te identificeren",
+  "message.tnkloot.disabled": "Identificatie is uitgeschakeld.",
+  "message.tnkloot.empty_pool": "Geen beschikbaar wapen voor rang %s. Vraag een beheerder om /tnkloot validate uit te voeren.",
+  "message.tnkloot.identified": "[Gilde] Geïdentificeerd: %s",
+  "message.tnkloot.unlocked": "[Gilde] Rang %s ontgrendeld — %s"
+}

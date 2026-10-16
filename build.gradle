@@ -1,0 +1,42 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+    id 'idea'
+}
+
+version = '0.2.0-alpha'
+group = 'dev.mikaaah.tnkloot'
+base { archivesName = 'tnkloot' }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+    runs {
+        client { client() }
+        server { server(); programArgument '--nogui' }
+    }
+    mods {
+        tnkloot { sourceSet(sourceSets.main) }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+
+repositories { mavenCentral() }
+dependencies { testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4' }
+tasks.named('test', Test) { useJUnitPlatform() }
+java { withSourcesJar() }
+tasks.named('processResources') {
+    inputs.property('version', project.version)
+    filesMatching('META-INF/neoforge.mods.toml') { expand(version: project.version) }
+}
+
+neoForge.unitTest {
+    enable()
+    testedMod = neoForge.mods.tnkloot
+}
+dependencies { testRuntimeOnly 'org.junit.platform:junit-platform-launcher' }
+
+// Forward console commands during the development server run.
+tasks.named('runServer', JavaExec) { standardInput = System.in }
