@@ -4,10 +4,8 @@
     "affix_type": "basic_effect",
     "exclusive_set": [],
     "weights": {
-      "pinnacle": {
-        "quality": 0.75,
-        "weight": 20
-      }
+      "quality": 0.1,
+      "weight": 25
     }
   },
   "mob_effect": "apothic_attributes:sundering",

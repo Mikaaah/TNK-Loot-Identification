@@ -17,8 +17,8 @@ Rolls select distinct eligible affixes. A rule is skipped when its type has no r
 ## Included pools
 
 - Melee: attack damage, attack speed, armor penetration and life steal; bleeding and execution at higher rarities.
-- Armor: armor, toughness, health, movement speed and knockback resistance; regeneration effects at higher rarities.
-- Ranged: draw speed, arrow damage and arrow velocity; poison effects and magical arrows at higher rarities.
+- Armor: armor, toughness, health, movement speed and knockback resistance; healing when hurt at higher rarities.
+- Ranged: draw speed, arrow damage and arrow velocity; sundering effects and magical arrows at higher rarities.
 - Tools: mining speed, experience and reach; haste and radial mining at higher rarities.
 - All supported categories can also roll luck.
 

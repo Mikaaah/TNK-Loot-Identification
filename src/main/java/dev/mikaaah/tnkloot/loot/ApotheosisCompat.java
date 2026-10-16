@@ -12,7 +12,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
-import java.util.List;
 
 /** Required, compile-checked Apotheosis API. Missing affixes reject the transaction. */
 public final class ApotheosisCompat {

@@ -48,6 +48,10 @@ public final class IdentifierSmokeTest {
             for (int i = 0; i < 7; i++) menu.getSlot(i).set(UnidentifiedWeaponItem.create(0));
             require(menu.clickMenuButton(player, 0) && menu.busy(), "Batch did not start");
             require(player.getInventory().countItem(Items.EMERALD) == 0, "Batch cost not charged exactly once");
+            ItemStack locked = menu.getSlot(0).getItem().copy();
+            menu.clicked(0, 0, net.minecraft.world.inventory.ClickType.THROW, player);
+            require(ItemStack.matches(locked, menu.getSlot(0).getItem()), "Can extract a rolling slot");
+            require(!menu.clickMenuButton(player, 0), "Could start a second paid batch while rolling");
             menu.removed(player);
             int found = 0;
             for (var stack : player.getInventory().items) if (!stack.isEmpty()) {
@@ -59,6 +63,31 @@ public final class IdentifierSmokeTest {
             menu.removed(player);
             require(player.getInventory().items.stream().mapToInt(ItemStack::getCount).sum() == 7, "Duplicate close duplicated items");
 
+            // Insufficient funds must preserve the complete batch.
+            player.getInventory().clearContent();
+            TnkMenu unpaid = new TnkMenu(TnkMenus.IDENTIFY.get(), 2, player.getInventory(), false);
+            unpaid.getSlot(0).set(UnidentifiedWeaponItem.create(0));
+            unpaid.clickMenuButton(player, 0);
+            require(!unpaid.busy() && unpaid.getSlot(0).getItem().getItem() instanceof UnidentifiedWeaponItem, "Unpaid batch consumed token");
+            unpaid.removed(player);
+            player.getInventory().clearContent();
+
+            // Exercise normal rolling completion using server game-time increments.
+            player.getInventory().setItem(0, new ItemStack(Items.EMERALD, 7));
+            TnkMenu completed = new TnkMenu(TnkMenus.IDENTIFY.get(), 3, player.getInventory(), false);
+            for (int i = 0; i < 7; i++) completed.getSlot(i).set(UnidentifiedWeaponItem.create(0));
+            completed.clickMenuButton(player, 0);
+            long clock = server.overworld().getGameTime();
+            for (int tick = 0; tick < 400 && completed.busy(); tick++) {
+                server.overworld().setGameTime(clock + tick + 1);
+                completed.broadcastChanges();
+            }
+            require(!completed.busy(), "Roll animation never finished");
+            for (int i = 0; i < 7; i++) require(completed.getSlot(i).getItem()
+                .getOrDefault(Apoth.Components.AFFIXES, ItemAffixes.EMPTY).size() > 0, "Animation stopped on a preview");
+            completed.removed(player);
+            require(player.getInventory().items.stream().mapToInt(ItemStack::getCount).sum() == 7, "Completed roll lost results");
+            server.overworld().setGameTime(clock);
             BlockPos pos = new BlockPos(8, 100, 8);
             var block = TnkLoot.IDENTIFIER_BLOCK.get();
             var state = block.defaultBlockState();

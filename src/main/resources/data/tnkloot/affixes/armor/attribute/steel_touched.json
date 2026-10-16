@@ -17,9 +17,9 @@
   },
   "operation": "add_value",
   "values": {
-    "tnkloot:common": 1,
-    "tnkloot:uncommon": 1,
-    "tnkloot:rare": 1,
+    "tnkloot:common": 0.3,
+    "tnkloot:uncommon": 0.45,
+    "tnkloot:rare": 0.6,
     "tnkloot:epic": {
       "min": 1.125,
       "max": 2.25
