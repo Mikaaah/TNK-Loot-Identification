@@ -3,7 +3,7 @@
 Configurable unidentified weapons, armor and tools with Guild progression for **Minecraft 1.21.1 / NeoForge**.
 
 [![Build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml/badge.svg)](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml)
-[Issues](https://github.com/Mikaaah/TNK-Loot-Identification/issues) · [Configuration](docs/configuration.md) · [FTB Quests setup](examples/ftb-quests-reward-guide.md)
+[Wiki](https://github.com/Mikaaah/TNK-Loot-Identification/wiki) · [Issues](https://github.com/Mikaaah/TNK-Loot-Identification/issues) · [Configuration](https://github.com/Mikaaah/TNK-Loot-Identification/wiki/Configuration) · [FTB Quests setup](https://github.com/Mikaaah/TNK-Loot-Identification/wiki/FTB-Quests-Integration)
 
 **Builds:** [Download the latest successful build](https://github.com/Mikaaah/TNK-Loot-Identification/actions/workflows/build.yml) → open a successful run → Artifacts → TNK-Loot-0.6.1-alpha. Install the plain JAR; the sources JAR is for developers.
 
@@ -16,7 +16,7 @@ Find the Identifier block and all eight unidentified item types in the **T&K Loo
 Install the compiled `tnkloot` JAR on **both client and server**, with Java 21 and NeoForge **21.1.262 or newer** for Minecraft 1.21.1. Apotheosis is required, along with Placebo, Patchouli, Apothic Attributes, Apothic Spawners and Apothic Enchanting. FTB Quests and FTB Teams remain optional.
 
 1. Start a world/server once to generate `config/tnkloot/tiers.json`.
-2. Edit the tiers and weapon pools. See [the configuration guide](docs/configuration.md).
+2. Edit the tiers and weapon pools. See [the configuration guide](https://github.com/Mikaaah/TNK-Loot-Identification/wiki/Configuration).
 3. Run `/tnkloot reload`, then `/tnkloot validate` as an operator.
 4. Run `/tnkloot unidentified @s` in game, place an Identifier (`/give @s tnkloot:identifier`), open its inventory, insert the token and confirm the shown cost. Add a category, for example `/tnkloot unidentified @s explorer helmet`, to award a different token type.
 
@@ -70,4 +70,4 @@ Windows: `gradlew.bat build`. Output: `build/libs/tnkloot-0.6.1-alpha.jar`. The 
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md). All rights reserved, matching the original project metadata.
 
-See [Apotheosis presets](docs/apotheosis-presets.md) for the affix ladder and datapack customization. Existing `tiers.json` files are preserved; new worlds receive the improved material pools. Apply the [example](examples/tiers.example.json) manually if you want those pool changes in an existing pack.
+See [Apotheosis presets](https://github.com/Mikaaah/TNK-Loot-Identification/wiki/Apotheosis-Presets) for the affix ladder and datapack customization. Existing `tiers.json` files are preserved; new worlds receive the improved material pools. Apply the [example](examples/tiers.example.json) manually if you want those pool changes in an existing pack.
